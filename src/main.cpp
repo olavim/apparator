@@ -8,13 +8,14 @@
 #include "shaders.hpp"
 #include "math.hpp"
 #include "camera.hpp"
+#include "input.hpp"
 
 using namespace apparator;
 
-static const int window_width = 1024;
-static const int window_height = 768;
+static const float window_width = 1024;
+static const float window_height = 768;
 
-int main(int argc, const char * argv[]) {
+int main() {
 	// Initialise GLFW
 	if(!glfwInit()) {
 		fprintf(stderr, "Failed to initialize GLFW\n");
@@ -74,41 +75,31 @@ int main(int argc, const char * argv[]) {
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData), vertexBufferData, GL_STATIC_DRAW);
 
+	// Dark blue background
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	glfwPollEvents();
-	glfwSetCursorPos(window, window_width / 2, window_height / 2);
+	input::MouseInputManager mim(window);
+	mim.setCursorMode(CURSOR_MODE_CAPTURED);
 
-	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-
-	camera::PerspectiveCamera camera(90, (float) window_width / (float) window_height, 0.1, 100);
+	camera::PerspectiveCamera camera(90, window_width / window_height, 0.1, 100);
 	camera.move(math::vec3(0, 0, 5));
 
 	GLuint matrixId = shaders.uniformLocation("MVP");
 
-	double lastTime = glfwGetTime();
-	double prevMouseX = 0;
-	double prevMouseY = 0;
-	double mouseX;
-	double mouseY;
+	// double lastTime = glfwGetTime();
 
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window)) {
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT);
+		mim.update();
 
-		double currentTime = glfwGetTime();
-		float deltaTime = float(currentTime - lastTime);
-		lastTime = currentTime;
-
-		glfwGetCursorPos(window, &mouseX, &mouseY);
-
-		double mouseXDelta = prevMouseX - mouseX;
-		double mouseYDelta = prevMouseY - mouseY;
-		prevMouseX = mouseX;
-		prevMouseY = mouseY;
+		// double currentTime = glfwGetTime();
+		// float deltaTime = float(currentTime - lastTime);
+		// lastTime = currentTime;
 
 		shaders.use();
 
@@ -134,23 +125,11 @@ int main(int argc, const char * argv[]) {
 
 		camera.move(math::vec3(moveX, moveY, moveZ));
 		camera.rotate(
-			0.0005 * mouseXDelta,
-			0.0005 * mouseYDelta
+			0.0005 * -mim.getMouseDeltaX(),
+			0.0005 * -mim.getMouseDeltaY()
 		);
 
-		math::mat4 model = math::mat4(1);
 		math::mat4 mvp = camera.getTransform() * math::mat4(1);
-
-		// math::Mat4 mat = mvp;
-		// printf("%f, %f, %f, %f\n", mat[0][0], mat[0][1], mat[0][2], mat[0][3]);
-		// printf("%f, %f, %f, %f\n", mat[1][0], mat[1][1], mat[1][2], mat[1][3]);
-		// printf("%f, %f, %f, %f\n", mat[2][0], mat[2][1], mat[2][2], mat[2][3]);
-		// printf("%f, %f, %f, %f\n\n", mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
-
-		// GLfloat *p = &mvp[0][0];
-		// printf("%f, %f, %f, %f\n", *(p + 0), *(p + 1), *(p + 2), *(p + 3));
-		// printf("%f, %f, %f, %f\n", *(p + 4), *(p + 5), *(p + 6), *(p + 7));
-		// printf("%f, %f, %f, %f\n\n", *(p + 8), *(p + 9), *(p + 10), *(p + 11));
 
 		glUniformMatrix4fv(matrixId, 1, GL_FALSE, &mvp[0][0]);
 
@@ -165,7 +144,7 @@ int main(int argc, const char * argv[]) {
 			GL_FLOAT, // Type
 			GL_FALSE, // Normalized?
 			0, // Stride
-			(void*)0 // Array buffer offset
+			static_cast<void*>(0) // Array buffer offset
 		);
 		glDrawArrays(GL_TRIANGLES, 0, numVertices);
 		glDisableVertexAttribArray(0);
@@ -180,7 +159,6 @@ int main(int argc, const char * argv[]) {
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteVertexArrays(1, &vertexArrayId);
-	shaders.deleteProgram();
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();

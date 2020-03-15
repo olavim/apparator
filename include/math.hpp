@@ -17,10 +17,12 @@ namespace apparator {
 				vec3(const vec3 &vector);
 
 				GLfloat magnitude();
-				const GLfloat magnitude() const;
+				GLfloat magnitude() const;
 
-				GLfloat& operator [] (const int index);
-				const GLfloat& operator [] (const int index) const;
+				vec3 &operator = (const vec3 &rhs) = default;
+
+				GLfloat &operator [] (const int index);
+				const GLfloat &operator [] (const int index) const;
 
 				vec3 &operator *= (GLfloat scalar);
 				vec3 &operator += (const vec3 &vector);
@@ -42,10 +44,12 @@ namespace apparator {
 				vec4(GLfloat d, const vec3 &vector);
 
 				GLfloat magnitude();
-				const GLfloat magnitude() const;
+				GLfloat magnitude() const;
 
-				GLfloat& operator [] (int index);
-				const GLfloat& operator [] (int index) const;
+				vec4 &operator = (const vec4 &rhs) = default;
+
+				GLfloat &operator [] (int index);
+				const GLfloat &operator [] (int index) const;
 
 				vec4 &operator *= (GLfloat scalar);
 				vec4 &operator += (const vec4 &vector);
@@ -63,6 +67,8 @@ namespace apparator {
 				mat4();
 				mat4(const GLfloat identity);
 				mat4(const vec4 &row1, const vec4 &row2, const vec4 &row3, const vec4 &row4);
+
+				mat4 &operator = (const mat4 &rhs) = default;
 
 				vec4 &operator [] (const int index);
 				const vec4 &operator [] (const int index) const;
@@ -83,8 +89,8 @@ namespace apparator {
 		vec3 normalize(const vec3 &a);
 		vec4 normalize(const vec4 &a);
 
-		void printVec(const math::vec3 &vec);
-		void printVec(const math::vec4 &vec);
-		void printMat(const math::mat4 &mat);
+		void printVec(const vec3 &vec);
+		void printVec(const vec4 &vec);
+		void printMat(const mat4 &mat);
 	}
 }

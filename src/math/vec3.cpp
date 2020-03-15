@@ -24,13 +24,13 @@ math::vec3::vec3(const math::vec3 &vector) {
 }
 
 GLfloat math::vec3::magnitude() {
-	GLfloat *arr = this->arr;
-	return sqrt((arr[0] * arr[0]) + (arr[1] * arr[1]) + (arr[2] * arr[2]));
+	GLfloat *a = this->arr;
+	return sqrt((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]));
 }
 
-const GLfloat math::vec3::magnitude() const {
-	const GLfloat *arr = this->arr;
-	return sqrt((arr[0] * arr[0]) + (arr[1] * arr[1]) + (arr[2] * arr[2]));
+GLfloat math::vec3::magnitude() const {
+	const GLfloat *a = this->arr;
+	return sqrt((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]));
 }
 
 GLfloat &math::vec3::operator [] (const int index) {

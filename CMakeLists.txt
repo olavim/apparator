@@ -2,6 +2,28 @@ cmake_minimum_required(VERSION 3.8.2)
 
 project(apparator)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if (MSVC)
+	# warning level 4 and all warnings as errors
+	add_compile_options(/W4 /WX)
+else()
+	# lots of warnings and all warnings as errors
+	add_compile_options(
+		-Wall
+		-Werror
+		-Wextra
+		-Wpedantic
+		-Wshadow
+		-Wnon-virtual-dtor
+		-Wold-style-cast
+		-Wcast-align
+		-Wunused
+	)
+endif()
+
 include_directories(include)
 
 # Add source files

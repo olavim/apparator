@@ -61,14 +61,14 @@ shaders::ShaderProgram::ShaderProgram(const char* vertexShaderPath, const char* 
 	glDeleteShader(fragmentShaderId);
 }
 
+shaders::ShaderProgram::~ShaderProgram() {
+	glDeleteProgram(this->programId);
+}
+
 void shaders::ShaderProgram::use() {
 	glUseProgram(this->programId);
 }
 
 GLuint shaders::ShaderProgram::uniformLocation(const char* name) {
 	return glGetUniformLocation(this->programId, name);
-}
-
-void shaders::ShaderProgram::deleteProgram() {
-	glDeleteProgram(this->programId);
 }
