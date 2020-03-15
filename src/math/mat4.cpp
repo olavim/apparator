@@ -47,6 +47,11 @@ math::mat4 &math::mat4::operator *= (const mat4& matrix) {
 	return *this;
 }
 
+math::mat4 &math::mat4::operator - () {
+	(*this) *= -1;
+	return *this;
+}
+
 math::vec4 math::operator * (math::mat4 lhs, const vec4& columnVector) {
 	return math::vec4(
 		lhs[0] * columnVector,

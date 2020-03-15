@@ -71,6 +71,8 @@ math::mat4 math::lookAt(const math::vec3 &eye, const math::vec3 &target, const m
 	math::vec3 xAxis = math::normalize(math::cross(math::normalize(up), zAxis));
 	math::vec3 yAxis = math::cross(zAxis, xAxis);
 
+	zAxis *= -1;
+
 	return math::mat4(
 		math::vec4(xAxis[0], yAxis[0], zAxis[0], 0),
 		math::vec4(xAxis[1], yAxis[1], zAxis[1], 0),

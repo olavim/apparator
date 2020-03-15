@@ -90,40 +90,39 @@ int main() {
 
 	GLuint matrixId = shaders.uniformLocation("MVP");
 
-	// double lastTime = glfwGetTime();
+	double lastTime = glfwGetTime();
+	double speed = 3;
 
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window)) {
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT);
 		mim.update();
 
-		// double currentTime = glfwGetTime();
-		// float deltaTime = float(currentTime - lastTime);
-		// lastTime = currentTime;
+		double currentTime = glfwGetTime();
+		float deltaTime = float(currentTime - lastTime);
+		lastTime = currentTime;
 
 		shaders.use();
 
-		GLfloat moveX = 0;
-		GLfloat moveY = 0;
-		GLfloat moveZ = 0;
+		math::vec3 position;
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			moveY = 0.1;
+			position += camera.forward() * deltaTime * speed;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			moveY = -0.1;
+			position -= camera.forward() * deltaTime * speed;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			moveX = -0.1;
+			position += camera.right() * deltaTime * speed;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			moveX = 0.1;
+			position -= camera.right() * deltaTime * speed;
 		}
 
-		camera.move(math::vec3(moveX, moveY, moveZ));
+		camera.move(position);
 		camera.rotate(
 			0.0005 * -mim.getMouseDeltaX(),
 			0.0005 * -mim.getMouseDeltaY()

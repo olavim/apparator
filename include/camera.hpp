@@ -13,6 +13,9 @@ namespace apparator {
 				PerspectiveCamera(GLfloat fov, GLfloat aspectRatio, GLfloat near, GLfloat far);
 				void move(const math::vec3 &vector);
 				void rotate(const GLfloat horizontal, const GLfloat vertical);
+				math::vec3 forward();
+				math::vec3 right();
+				math::vec3 up();
 				math::mat4 getTransform();
 		};
 	}

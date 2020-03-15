@@ -82,6 +82,11 @@ math::vec4 &math::vec4::operator -= (const math::vec4 &vector) {
 	return *this;
 }
 
+math::vec4 &math::vec4::operator - () {
+	(*this) *= -1;
+	return *this;
+}
+
 math::vec4 math::operator * (math::vec4 lhs, GLfloat scalar) {
 	lhs *= scalar;
 	return lhs;

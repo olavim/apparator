@@ -27,6 +27,7 @@ namespace apparator {
 				vec3 &operator *= (GLfloat scalar);
 				vec3 &operator += (const vec3 &vector);
 				vec3 &operator -= (const vec3 &vector);
+				vec3 &operator - ();
 		};
 
 		vec3 operator * (vec3 lhs, GLfloat scalar);
@@ -54,6 +55,7 @@ namespace apparator {
 				vec4 &operator *= (GLfloat scalar);
 				vec4 &operator += (const vec4 &vector);
 				vec4 &operator -= (const vec4 &vector);
+				vec4 &operator - ();
 		};
 
 		vec4 operator * (vec4 lhs, GLfloat scalar);
@@ -74,6 +76,7 @@ namespace apparator {
 				const vec4 &operator [] (const int index) const;
 
 				mat4 &operator *= (const mat4 &matrix);
+				mat4 &operator - ();
 		};
 
 		vec4 operator * (mat4 lhs, const vec4 &columnVector);

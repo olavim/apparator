@@ -62,6 +62,11 @@ math::vec3 &math::vec3::operator -= (const math::vec3 &vector) {
 	return *this;
 }
 
+math::vec3 &math::vec3::operator - () {
+	(*this) *= -1;
+	return *this;
+}
+
 math::vec3 math::operator * (math::vec3 lhs, GLfloat scalar) {
 	lhs *= scalar;
 	return lhs;
