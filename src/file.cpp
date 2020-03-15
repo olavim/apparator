@@ -4,7 +4,9 @@
 
 #include "file.hpp"
 
-std::string apparator::file::read(const char* filePath) {
+using namespace apparator;
+
+std::string file::read(const char* filePath) {
 	std::string fileData;
 	std::ifstream fileStream(filePath, std::ios::in);
 

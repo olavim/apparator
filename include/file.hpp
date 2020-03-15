@@ -1,5 +1,4 @@
-#ifndef FILE_HPP
-#define FILE_HPP
+#pragma once
 
 #include <string>
 
@@ -8,5 +7,3 @@ namespace apparator {
 		std::string read(const char* filePath);
 	}
 }
-
-#endif

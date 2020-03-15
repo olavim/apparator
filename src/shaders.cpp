@@ -7,6 +7,8 @@
 #include "file.hpp"
 #include "shaders.hpp"
 
+using namespace apparator;
+
 void compileShader(GLuint shaderId, char const* source) {
 	glShaderSource(shaderId, 1, &source , NULL);
 	glCompileShader(shaderId);
@@ -23,42 +25,50 @@ void compileShader(GLuint shaderId, char const* source) {
 	}
 }
 
-apparator::shaders::ShaderProgram::ShaderProgram(const char* vertexShaderPath, const char* fragmentShaderPath) {
-	programId = glCreateProgram();
+shaders::ShaderProgram::ShaderProgram(const char* vertexShaderPath, const char* fragmentShaderPath) {
+	this->programId = glCreateProgram();
 
 	// Create the shaders
 	GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 
-	std::string vertexShaderSource = apparator::file::read(vertexShaderPath);
-	std::string fragmentShaderSource = apparator::file::read(fragmentShaderPath);
+	std::string vertexShaderSource = file::read(vertexShaderPath);
+	std::string fragmentShaderSource = file::read(fragmentShaderPath);
 
 	// Compile shaders
 	compileShader(vertexShaderId, vertexShaderSource.c_str());
 	compileShader(fragmentShaderId, fragmentShaderSource.c_str());
 
 	// Link the program
-	glAttachShader(programId, vertexShaderId);
-	glAttachShader(programId, fragmentShaderId);
-	glLinkProgram(programId);
+	glAttachShader(this->programId, vertexShaderId);
+	glAttachShader(this->programId, fragmentShaderId);
+	glLinkProgram(this->programId);
 
 	// Check for linking errors
 	int infoLogLength;
-	glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLogLength);
+	glGetProgramiv(this->programId, GL_INFO_LOG_LENGTH, &infoLogLength);
 
 	if (infoLogLength > 0) {
 		std::vector<char> errorMessage(infoLogLength+1);
-		glGetProgramInfoLog(programId, infoLogLength, NULL, &errorMessage[0]);
+		glGetProgramInfoLog(this->programId, infoLogLength, NULL, &errorMessage[0]);
 		printf("Could not link shaders: %s\n", &errorMessage[0]);
 	}
 
 	// Clean up
-	glDetachShader(programId, vertexShaderId);
-	glDetachShader(programId, fragmentShaderId);
+	glDetachShader(this->programId, vertexShaderId);
+	glDetachShader(this->programId, fragmentShaderId);
 	glDeleteShader(vertexShaderId);
 	glDeleteShader(fragmentShaderId);
 }
 
-void apparator::shaders::ShaderProgram::use() {
-	glUseProgram(programId);
+void shaders::ShaderProgram::use() {
+	glUseProgram(this->programId);
+}
+
+GLuint shaders::ShaderProgram::uniformLocation(const char* name) {
+	return glGetUniformLocation(this->programId, name);
+}
+
+void shaders::ShaderProgram::deleteProgram() {
+	glDeleteProgram(this->programId);
 }

@@ -1,5 +1,4 @@
-#ifndef SHADERS_HPP
-#define SHADERS_HPP
+#pragma once
 
 #include <GL/glew.h>
 
@@ -10,8 +9,8 @@ namespace apparator {
 			public:
 				ShaderProgram(const char* vertexShaderPath, const char* fragmentShaderPath);
 				void use();
+				GLuint uniformLocation(const char* name);
+				void deleteProgram();
 		};
 	}
 }
-
-#endif
