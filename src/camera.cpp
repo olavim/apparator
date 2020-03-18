@@ -16,7 +16,7 @@ void camera::PerspectiveCamera::move(const math::vec3 &vector) {
 }
 
 void camera::PerspectiveCamera::rotate(const GLfloat horizontal, const GLfloat vertical) {
-	this->angle -= math::vec3(horizontal, vertical, 0);
+	this->angle += math::vec3(horizontal, vertical, 0);
 }
 
 math::vec3 camera::PerspectiveCamera::forward() {

@@ -41,7 +41,7 @@ add_executable(apparator ${HEADER_FILES} ${SOURCE_FILES})
 message(STATUS "Checking dependencies")
 find_package(OpenGL 3 REQUIRED COMPONENTS OpenGL)
 find_package(GLEW REQUIRED)
-find_package(glfw3 REQUIRED)
+find_package(glfw3 3.3 REQUIRED)
 
 if(HAS_FS)
 	message(STATUS "Compiler has std::filesystem capabilities")
