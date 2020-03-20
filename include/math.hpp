@@ -84,7 +84,8 @@ namespace apparator {
 
 		GLfloat radians(const GLfloat angle);
 
-		mat4 perspective(const GLfloat fov, const GLfloat aspect, const GLfloat near, const GLfloat far);
+		mat4 perspective(GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far);
+		mat4 ortographic(GLfloat bottom, GLfloat top, GLfloat left, GLfloat right, GLfloat near, GLfloat far);
 		mat4 lookAt(const vec3 &eye, const vec3 &target, const vec3 &up);
 
 		GLfloat dot(const vec3 &a, const vec3 &b);

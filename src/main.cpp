@@ -5,6 +5,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "shaders.hpp"
 #include "math.hpp"
 #include "camera.hpp"
@@ -52,42 +55,54 @@ int main() {
 
 	// Cube
 	GLfloat vertexBufferData[] = {
+		// left - br,bl,tl
 		-1.0f,-1.0f,-1.0f,
 		-1.0f,-1.0f, 1.0f,
 		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f,-1.0f,
-		1.0f,-1.0f,-1.0f,
-		1.0f, 1.0f,-1.0f,
-		1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
+		// left - br,tl,tr
 		-1.0f,-1.0f,-1.0f,
 		-1.0f, 1.0f, 1.0f,
 		-1.0f, 1.0f,-1.0f,
+		// front - tr,bl,tl
+		1.0f, 1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f,
+		// front - tr,br,bl
+		1.0f, 1.0f,-1.0f,
+		1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		// bottom - tr,bl,br
+		1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		1.0f,-1.0f,-1.0f,
+		// bottom - tr,tl,bl
 		1.0f,-1.0f, 1.0f,
 		-1.0f,-1.0f, 1.0f,
 		-1.0f,-1.0f,-1.0f,
+		// back - tr,br,bl
 		-1.0f, 1.0f, 1.0f,
 		-1.0f,-1.0f, 1.0f,
 		1.0f,-1.0f, 1.0f,
+		// back - tl,tr,bl
+		1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		1.0f,-1.0f, 1.0f,
+		// right - tr,bl,tl
 		1.0f, 1.0f, 1.0f,
 		1.0f,-1.0f,-1.0f,
 		1.0f, 1.0f,-1.0f,
+		// right - bl,tr,br
 		1.0f,-1.0f,-1.0f,
 		1.0f, 1.0f, 1.0f,
 		1.0f,-1.0f, 1.0f,
+		// top - tr,br,bl
 		1.0f, 1.0f, 1.0f,
 		1.0f, 1.0f,-1.0f,
 		-1.0f, 1.0f,-1.0f,
+		// top - tr,bl,tl
 		1.0f, 1.0f, 1.0f,
 		-1.0f, 1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f,-1.0f, 1.0f
+		-1.0f, 1.0f, 1.0f
 	};
 
 	GLfloat colorBufferData[] = {
@@ -129,6 +144,57 @@ int main() {
 		0.982f, 0.099f, 0.879f
 	};
 
+	GLfloat textureCoordinateData[] = {
+		// left - br,bl,tl
+		1.0f, 0.0f,
+		0.0f, 0.0f,
+		0.0f, 1.0f,
+		// left - br,tl,tr
+		1.0f, 0.0f,
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+		// front - tr,bl,tl
+		1.0f, 1.0f,
+		0.0f, 0.0f,
+		0.0f, 1.0f,
+		// front - tr,br,bl
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+		0.0f, 0.0f,
+		// bottom - tr,bl,br
+		1.0f, 1.0f,
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		// bottom - tr,tl,bl
+		1.0f, 1.0f,
+		0.0f, 1.0f,
+		0.0f, 0.0f,
+		// back - tr,br,bl
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+		0.0f, 0.0f,
+		// back - tl,tr,bl
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+		0.0f, 0.0f,
+		// right - tr,bl,tl
+		1.0f, 1.0f,
+		0.0f, 0.0f,
+		0.0f, 1.0f,
+		// right - bl,tr,br
+		0.0f, 0.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+		// top - tr,br,bl
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+		0.0f, 0.0f,
+		// top - tr,bl,tl
+		1.0f, 1.0f,
+		0.0f, 0.0f,
+		0.0f, 1.0f
+	};
+
 	// Create vertex array object
 	GLuint vertexArray;
 	glGenVertexArrays(1, &vertexArray);
@@ -144,6 +210,32 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colorBufferData), colorBufferData, GL_STATIC_DRAW);
 
+	GLuint textureCoordinates;
+	glGenBuffers(1, &textureCoordinates);
+	glBindBuffer(GL_ARRAY_BUFFER, textureCoordinates);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoordinateData), textureCoordinateData, GL_STATIC_DRAW);
+
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width;
+	int height;
+	int nrChannels;
+	unsigned char *data = stbi_load("textures/wall.jpg", &width, &height, &nrChannels, 0);
+	if (data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	} else {
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
@@ -156,7 +248,9 @@ int main() {
 	inputMgr.setAxisLabel("moveY", GLFW_KEY_LEFT_SHIFT, GLFW_KEY_SPACE);
 	inputMgr.setAxisLabel("moveZ", GLFW_KEY_W, GLFW_KEY_S);
 
-	camera::PerspectiveCamera camera(90, window_width / window_height, 0.1, 100);
+	GLfloat aspect = window_width / window_height;
+	// camera::PerspectiveCamera camera(90, aspect);
+	camera::OrtographicCamera camera(-5 * aspect, 5 * aspect, -5, 5);
 	camera.move(math::vec3(0, 0, 5));
 
 	GLuint matrixId = shaders.uniformLocation("MVP");
@@ -177,9 +271,9 @@ int main() {
 		shaders.use();
 
 		math::vec3 position;
-		position -= camera.right() * deltaTime * speed * inputMgr.getAxis("moveX");
-		position -= camera.up() * deltaTime * speed * inputMgr.getAxis("moveY");
-		position -= camera.forward() * deltaTime * speed * inputMgr.getAxis("moveZ");
+		position -= camera.right() * inputMgr.getAxis("moveX") * deltaTime * speed;
+		position -= camera.up() * inputMgr.getAxis("moveY") * deltaTime * speed;
+		position -= camera.forward() * inputMgr.getAxis("moveZ") * deltaTime * speed;
 		camera.move(position);
 
 		camera.rotate(
@@ -194,13 +288,17 @@ int main() {
 		// Draw triangle
 		int numVertices = sizeof(vertexBufferData) / sizeof(*vertexBufferData) / 3;
 
-		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, static_cast<void*>(0));
+		glEnableVertexAttribArray(0);
 
-		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, static_cast<void*>(0));
+		glEnableVertexAttribArray(1);
+
+		glBindBuffer(GL_ARRAY_BUFFER, textureCoordinates);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, static_cast<void*>(0));
+		glEnableVertexAttribArray(2);
 
 		glDrawArrays(GL_TRIANGLES, 0, numVertices);
 		glDisableVertexAttribArray(0);
@@ -215,6 +313,7 @@ int main() {
 	// Cleanup
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteBuffers(1, &colorBuffer);
+	glDeleteBuffers(1, &textureCoordinates);
 	glDeleteVertexArrays(1, &vertexArray);
 
 	// Close OpenGL window and terminate GLFW

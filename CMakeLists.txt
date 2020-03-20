@@ -18,7 +18,6 @@ else()
 		-Wpedantic
 		-Wshadow
 		-Wnon-virtual-dtor
-		-Wold-style-cast
 		-Wcast-align
 		-Wunused
 	)
@@ -54,6 +53,7 @@ target_link_libraries(apparator OpenGL::GL)
 target_link_libraries(apparator GLEW::GLEW)
 target_link_libraries(apparator glfw)
 
-# Copy shaders to build dir
-message(STATUS "Copying shaders to build directory")
+# Copy assets to build dir
+message(STATUS "Copying assets to build directory")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/textures DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

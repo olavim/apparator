@@ -25,6 +25,10 @@ input::InputManager::InputManager(GLFWwindow *win) {
 
 	glfwSetCursorPosCallback(this->window, input::InputManager::cursorPosCallback);
 	glfwSetKeyCallback(this->window, input::InputManager::keyCallback);
+
+	glfwGetCursorPos(this->window, &this->mouseX, &this->mouseY);
+	this->mouseTickX = this->mouseX;
+	this->mouseTickY = this->mouseY;
 }
 
 input::InputManager::~InputManager() {

@@ -57,13 +57,28 @@ math::vec3 math::normalize(const math::vec3 &vector) {
 	);
 }
 
-math::mat4 math::perspective(const GLfloat fov, const GLfloat aspect, const GLfloat near, const GLfloat far) {
+math::mat4 math::perspective(GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far) {
 	return math::mat4(
 		math::vec4(1 / (aspect * tan(fov / 2)), 0, 0, 0),
 		math::vec4(0, 1 / tan(fov / 2), 0, 0),
 		math::vec4(0, 0, -(far + near) / (far - near), -1),
 		math::vec4(0, 0, -(2 * far * near) / (far - near), 0)
 	);
+}
+
+math::mat4 math::ortographic(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far) {
+	return math::mat4(
+		math::vec4(2 / (right - left), 0, 0, -(right + left) / (right - left)),
+		math::vec4(0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom)),
+		math::vec4(0, 0, -2 / (far - near), -(far + near) / (far - near)),
+		math::vec4(0, 0, 0, 1)
+	);
+	// return math::mat4(
+	// 	math::vec4(2 / (right - left), 0, 0, 0),
+	// 	math::vec4(0, 2 / (top - bottom), 0, 0),
+	// 	math::vec4(0, 0, -2 / (far - near), 0),
+	// 	math::vec4(-(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1)
+	// );
 }
 
 math::mat4 math::lookAt(const math::vec3 &eye, const math::vec3 &target, const math::vec3 &up) {
