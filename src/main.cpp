@@ -137,7 +137,7 @@ int main() {
 	GLfloat aspect = window_width / window_height;
 	// PerspectiveCamera camera(90, aspect);
 	OrtographicCamera camera(-5 * aspect, 5 * aspect, -5, 5);
-	camera.move(vec3(0, 0, 5));
+	camera.transform.translate(0, 0, 5);
 
 	GLuint matrixId = material->uniformLocation("MVP");
 
@@ -155,19 +155,21 @@ int main() {
 		lastTime = currentTime;
 
 		vec3 position;
-		position -= camera.right() * inputMgr.getAxis("moveX") * deltaTime * speed;
-		position -= camera.up() * inputMgr.getAxis("moveY") * deltaTime * speed;
-		position -= camera.forward() * inputMgr.getAxis("moveZ") * deltaTime * speed;
-		camera.move(position);
+		position += camera.transform.right() * inputMgr.getAxis("moveX") * deltaTime * speed;
+		position += camera.transform.up() * inputMgr.getAxis("moveY") * deltaTime * speed;
+		position += camera.transform.forward() * inputMgr.getAxis("moveZ") * deltaTime * speed;
+		camera.transform.translate(position[0], position[1], position[2]);
 
-		camera.rotate(
+		camera.transform.rotate(
+			mouseSensitivity * -inputMgr.getMouseDeltaY(),
 			mouseSensitivity * inputMgr.getMouseDeltaX(),
-			mouseSensitivity * inputMgr.getMouseDeltaY()
+			0
 		);
 
 		model.transform.setScale((3 + sin(currentTime)) / 4, 1, 1);
+		// model.transform.rotate(deltaTime * 1, 0, 0);
 
-		mat4 mvp = camera.getTransform() * model.transform.getMatrix();
+		mat4 mvp = camera.matrix() * model.transform.matrix();
 
 		glUniformMatrix4fv(matrixId, 1, GL_FALSE, &mvp[0][0]);
 

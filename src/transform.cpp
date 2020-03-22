@@ -27,7 +27,25 @@ void apr::Transform::rotate(float x, float y, float z) {
 	this->_rotation += vec3(x, y, z);
 }
 
-apr::mat4 apr::Transform::getMatrix() {
+void apr::Transform::setRotation(float x, float y, float z) {
+	this->_rotation[0] = x;
+	this->_rotation[1] = y;
+	this->_rotation[2] = z;
+}
+
+const apr::vec3& apr::Transform::translation() {
+	return this->_translation;
+}
+
+const apr::vec3& apr::Transform::scale() {
+	return this->_scale;
+}
+
+const apr::vec3& apr::Transform::rotation() {
+	return this->_rotation;
+}
+
+apr::mat4 apr::Transform::matrix() {
 	apr::mat4 translation(
 		apr::vec4(1, 0, 0, this->_translation[0]),
 		apr::vec4(0, 1, 0, this->_translation[1]),
@@ -70,4 +88,19 @@ apr::mat4 apr::Transform::getMatrix() {
 	apr::mat4 rotation = rotationX * rotationY * rotationZ;
 
 	return translation * scale * rotation;
+}
+
+apr::vec3 apr::Transform::forward() {
+	apr::mat4 mat = this->matrix();
+	return apr::vec3(mat[0][2], mat[1][2], mat[2][2]);
+}
+
+apr::vec3 apr::Transform::right() {
+	apr::mat4 mat = this->matrix();
+	return apr::vec3(-mat[0][0], -mat[1][0], -mat[2][0]);
+}
+
+apr::vec3 apr::Transform::up() {
+	apr::mat4 mat = this->matrix();
+	return apr::vec3(mat[0][1], mat[1][1], mat[2][1]);
 }
