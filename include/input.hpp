@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <string>
 #include <unordered_map>
 #include <GLFW/glfw3.h>
 
@@ -24,14 +24,14 @@ namespace apparator {
 
 			void update();
 			void setCursorMode(const int mode);
-			void setAxisLabel(const char* label, int negativeKey, int positiveKey);
-			void setAxisLabel(const char* label, int joystickAxis);
+			void setAxisLabel(std::string label, int negativeKey, int positiveKey);
+			void setAxisLabel(std::string label, int joystickAxis);
 			double getMouseX();
 			double getMouseY();
 			double getMouseDeltaX();
 			double getMouseDeltaY();
-			float getAxis(const char* label);
-			float getAxis(const char* label, int joystick);
+			float getAxis(std::string label);
+			float getAxis(std::string label, int joystick);
 		private:
 			GLFWwindow *window;
 			double mouseX = 0;
@@ -44,7 +44,7 @@ namespace apparator {
 			int keyState[GLFW_KEY_LAST + 1];
 			float* joystickAxes[GLFW_JOYSTICK_LAST + 1];
 
-			std::unordered_map<const char*, KeyAxis> keyAxisLabel;
-			std::unordered_map<const char*, int> joystickAxisLabel;
+			std::unordered_map<std::string, KeyAxis> keyAxisLabel;
+			std::unordered_map<std::string, int> joystickAxisLabel;
 	};
 }

@@ -85,8 +85,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	GLFWwindow* window;
-	window = glfwCreateWindow(window_width, window_height, "Apparator", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Apparator", NULL, NULL);
 
 	if (!window) {
 		fprintf(stderr, "Failed to open GLFW window.\n");
@@ -106,7 +105,7 @@ int main() {
 	}
 
 	// Create vertex array object
-	GLuint VAO;
+	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
@@ -129,17 +128,16 @@ int main() {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
 	InputManager inputMgr(window);
-	inputMgr.setCursorMode(CURSOR_MODE_CAPTURED);
 	inputMgr.setAxisLabel("moveX", GLFW_KEY_A, GLFW_KEY_D);
 	inputMgr.setAxisLabel("moveY", GLFW_KEY_LEFT_SHIFT, GLFW_KEY_SPACE);
 	inputMgr.setAxisLabel("moveZ", GLFW_KEY_W, GLFW_KEY_S);
 
-	GLfloat aspect = window_width / window_height;
-	// PerspectiveCamera camera(90, aspect);
-	OrtographicCamera camera(-5 * aspect, 5 * aspect, -5, 5);
+	float aspect = window_width / window_height;
+	PerspectiveCamera camera(90, aspect);
+	// OrtographicCamera camera(-5 * aspect, 5 * aspect, -5, 5);
 	camera.transform.translate(0, 0, 5);
 
-	GLuint matrixId = material->uniformLocation("MVP");
+	unsigned int matrixId = material->uniformLocation("MVP");
 
 	double lastTime = glfwGetTime();
 	double speed = 3;
@@ -154,24 +152,18 @@ int main() {
 		float deltaTime = float(currentTime - lastTime);
 		lastTime = currentTime;
 
-		vec3 position;
-		position += camera.transform.right() * inputMgr.getAxis("moveX") * deltaTime * speed;
-		position += camera.transform.up() * inputMgr.getAxis("moveY") * deltaTime * speed;
-		position += camera.transform.forward() * inputMgr.getAxis("moveZ") * deltaTime * speed;
-		camera.transform.translate(position[0], position[1], position[2]);
+		Vector3 position(inputMgr.getAxis("moveX"), inputMgr.getAxis("moveY"), inputMgr.getAxis("moveZ"));
+		camera.transform.translate(position * deltaTime * speed);
 
-		camera.transform.rotate(
-			mouseSensitivity * -inputMgr.getMouseDeltaY(),
-			mouseSensitivity * inputMgr.getMouseDeltaX(),
-			0
-		);
+		Quaternion yaw(Vector3(0, 1, 0), mouseSensitivity * -inputMgr.getMouseDeltaX());
+		Quaternion pitch(camera.transform.right(), mouseSensitivity * -inputMgr.getMouseDeltaY());
+		camera.transform.rotate(yaw * pitch);
 
 		model.transform.setScale((3 + sin(currentTime)) / 4, 1, 1);
-		// model.transform.rotate(deltaTime * 1, 0, 0);
 
-		mat4 mvp = camera.matrix() * model.transform.matrix();
+		Matrix4 mvp = model.transform.matrix() * camera.matrix();
 
-		glUniformMatrix4fv(matrixId, 1, GL_FALSE, &mvp[0][0]);
+		glUniformMatrix4fv(matrixId, 1, GL_FALSE, &mvp.m[0]);
 
 		model.draw();
 

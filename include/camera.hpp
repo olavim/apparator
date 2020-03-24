@@ -7,19 +7,19 @@
 namespace apparator {
 	class Camera {
 		public:
-			mat4 matrix();
+			Matrix4 matrix();
 			Transform transform;
 		protected:
-			mat4 projection;
+			Matrix4 projection;
 	};
 
 	class PerspectiveCamera: public Camera {
 		public:
-			PerspectiveCamera(GLfloat fov, GLfloat aspectRatio);
+			PerspectiveCamera(float fov, float aspectRatio);
 	};
 
 	class OrtographicCamera: public Camera {
 		public:
-			OrtographicCamera(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top);
+			OrtographicCamera(float left, float right, float bottom, float top);
 	};
 }

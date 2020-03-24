@@ -1,5 +1,6 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
+#include <string>
 #include "input.hpp"
 
 namespace apr = apparator;
@@ -22,10 +23,12 @@ apr::InputManager::InputManager(GLFWwindow *win) {
 
 	glfwSetWindowUserPointer(this->window, this);
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
+	glfwSetInputMode(window, GLFW_CURSOR, CURSOR_MODE_CAPTURED);
 
 	glfwSetCursorPosCallback(this->window, apr::InputManager::cursorPosCallback);
 	glfwSetKeyCallback(this->window, apr::InputManager::keyCallback);
 
+	glfwPollEvents();
 	glfwGetCursorPos(this->window, &this->mouseX, &this->mouseY);
 	this->mouseTickX = this->mouseX;
 	this->mouseTickY = this->mouseY;
@@ -40,11 +43,11 @@ void apr::InputManager::setCursorMode(const int mode) {
 	glfwSetInputMode(window, GLFW_CURSOR, mode);
 }
 
-void apr::InputManager::setAxisLabel(const char* label, int negativeKey, int positiveKey) {
+void apr::InputManager::setAxisLabel(std::string label, int negativeKey, int positiveKey) {
 	this->keyAxisLabel[label] = {negativeKey, positiveKey};
 }
 
-void apr::InputManager::setAxisLabel(const char* label, int joystickAxis) {
+void apr::InputManager::setAxisLabel(std::string label, int joystickAxis) {
 	this->joystickAxisLabel[label] = joystickAxis;
 }
 
@@ -71,7 +74,7 @@ double apr::InputManager::getMouseDeltaY() {
 	return this->mouseDeltaY;
 }
 
-float apr::InputManager::getAxis(const char* label) {
+float apr::InputManager::getAxis(std::string label) {
 	KeyAxis axis = this->keyAxisLabel[label];
 	float value = 0;
 
@@ -86,7 +89,7 @@ float apr::InputManager::getAxis(const char* label) {
 	return value;
 }
 
-float apr::InputManager::getAxis(const char* label, int joystick) {
+float apr::InputManager::getAxis(std::string label, int joystick) {
 	if (this->joystickAxisLabel.find(label) == this->joystickAxisLabel.end()) {
 		// Axis with given label does not exist
 		return 0;

@@ -20,6 +20,7 @@ else()
 		-Wnon-virtual-dtor
 		-Wcast-align
 		-Wunused
+		-Wno-unused-variable
 	)
 endif()
 

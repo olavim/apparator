@@ -8,117 +8,156 @@
 #include <glm/glm.hpp>
 
 namespace apparator {
-	class vec2 {
-			GLfloat arr[2];
+	class Vector2 {
+			float arr[2];
 		public:
-			vec2();
-			vec2(GLfloat a, GLfloat b);
-			vec2(const vec2 &vector);
+			Vector2();
+			Vector2(float a, float b);
+			Vector2(const Vector2 &vector);
 
-			GLfloat magnitude();
-			GLfloat magnitude() const;
+			float magnitude();
+			float magnitude() const;
 
-			vec2 &operator = (const vec2 &rhs) = default;
+			Vector2 &operator = (const Vector2 &rhs) = default;
 
-			GLfloat &operator [] (const int index);
-			const GLfloat &operator [] (const int index) const;
+			float &operator [] (const int index);
+			const float &operator [] (const int index) const;
 
-			vec2 &operator *= (GLfloat scalar);
-			vec2 &operator += (const vec2 &vector);
-			vec2 &operator -= (const vec2 &vector);
-			vec2 &operator - ();
+			Vector2 &operator *= (float scalar);
+			Vector2 &operator += (const Vector2 &vector);
+			Vector2 &operator -= (const Vector2 &vector);
+			Vector2 &operator - ();
 	};
 
-	vec2 operator * (vec2 lhs, GLfloat scalar);
-	GLfloat operator * (vec2 lhsRow, const vec2 &rhsColumn);
-	vec2 operator + (vec2 lhs, const vec2 &rhs);
-	vec2 operator - (vec2 lhs, const vec2 &rhs);
+	Vector2 operator * (Vector2 lhs, float scalar);
+	float operator * (Vector2 lhsRow, const Vector2 &rhsColumn);
+	Vector2 operator + (Vector2 lhs, const Vector2 &rhs);
+	Vector2 operator - (Vector2 lhs, const Vector2 &rhs);
 
-	class vec3 {
-			GLfloat arr[3];
+	class Vector3 {
+			float arr[3];
 		public:
-			vec3();
-			vec3(GLfloat a, GLfloat b, GLfloat c);
-			vec3(const vec3 &vector);
+			Vector3();
+			Vector3(float a, float b, float c);
+			Vector3(const Vector3 &vector);
 
-			GLfloat magnitude();
-			GLfloat magnitude() const;
+			float magnitude();
+			float magnitude() const;
 
-			vec3 &operator = (const vec3 &rhs) = default;
+			Vector3 &operator = (const Vector3 &rhs) = default;
 
-			GLfloat &operator [] (const int index);
-			const GLfloat &operator [] (const int index) const;
+			float &operator [] (const int index);
+			const float &operator [] (const int index) const;
 
-			vec3 &operator *= (GLfloat scalar);
-			vec3 &operator += (const vec3 &vector);
-			vec3 &operator -= (const vec3 &vector);
-			vec3 &operator - ();
+			Vector3 &operator *= (float scalar);
+			Vector3 &operator += (const Vector3 &vector);
+			Vector3 &operator -= (const Vector3 &vector);
+			Vector3 &operator - ();
 	};
 
-	vec3 operator * (vec3 lhs, GLfloat scalar);
-	GLfloat operator * (vec3 lhsRow, const vec3 &rhsColumn);
-	vec3 operator + (vec3 lhs, const vec3 &rhs);
-	vec3 operator - (vec3 lhs, const vec3 &rhs);
+	Vector3 operator * (Vector3 lhs, float scalar);
+	float operator * (Vector3 lhsRow, const Vector3 &rhsColumn);
+	Vector3 operator + (Vector3 lhs, const Vector3 &rhs);
+	Vector3 operator - (Vector3 lhs, const Vector3 &rhs);
 
-	class vec4 {
-			GLfloat arr[4];
+	class Vector4 {
+			float arr[4];
 		public:
-			vec4();
-			vec4(GLfloat a, GLfloat b, GLfloat c, GLfloat d);
-			vec4(const vec4 &vector);
-			vec4(const vec3 &vector, GLfloat d);
-			vec4(GLfloat d, const vec3 &vector);
+			Vector4();
+			Vector4(float a, float b, float c, float d);
+			Vector4(const Vector4 &vector);
+			Vector4(const Vector3 &vector, float d);
+			Vector4(float d, const Vector3 &vector);
 
-			GLfloat magnitude();
-			GLfloat magnitude() const;
+			float magnitude();
+			float magnitude() const;
 
-			vec4 &operator = (const vec4 &rhs) = default;
+			Vector4 &operator = (const Vector4 &rhs) = default;
 
-			GLfloat &operator [] (int index);
-			const GLfloat &operator [] (int index) const;
+			float &operator [] (int index);
+			const float &operator [] (int index) const;
 
-			vec4 &operator *= (GLfloat scalar);
-			vec4 &operator += (const vec4 &vector);
-			vec4 &operator -= (const vec4 &vector);
-			vec4 &operator - ();
+			Vector4 &operator *= (float scalar);
+			Vector4 &operator += (const Vector4 &vector);
+			Vector4 &operator -= (const Vector4 &vector);
+			Vector4 &operator - ();
 	};
 
-	vec4 operator * (vec4 lhs, GLfloat scalar);
-	GLfloat operator * (vec4 lhs, const vec4 &column);
-	vec4 operator + (vec4 lhs, const vec4 &vector);
-	vec4 operator - (vec4 lhs, const vec4 &vector);
+	Vector4 operator * (Vector4 lhs, float scalar);
+	float operator * (Vector4 lhs, const Vector4 &column);
+	Vector4 operator + (Vector4 lhs, const Vector4 &vector);
+	Vector4 operator - (Vector4 lhs, const Vector4 &vector);
 
-	class mat4 {
-			vec4 arr[4];
+	class Matrix4 {
 		public:
-			mat4();
-			mat4(const GLfloat identity);
-			mat4(const vec4 &row1, const vec4 &row2, const vec4 &row3, const vec4 &row4);
+			float m[16];
 
-			mat4 &operator = (const mat4 &rhs) = default;
+			Matrix4();
+			Matrix4(const float identity);
+			Matrix4(
+				float e00, float e01, float e02, float e03, float e10, float e11, float e12, float e13,
+				float e20, float e21, float e22, float e23, float e30, float e31, float e32, float e33
+			);
 
-			vec4 &operator [] (const int index);
-			const vec4 &operator [] (const int index) const;
+			void set(
+				float e00, float e01, float e02, float e03, float e10, float e11, float e12, float e13,
+				float e20, float e21, float e22, float e23, float e30, float e31, float e32, float e33
+			);
 
-			mat4 &operator *= (const mat4 &matrix);
-			mat4 &operator - ();
+			bool invert();
+			void transpose();
+
+			Matrix4 &operator = (const Matrix4 &rhs) = default;
+
+			Matrix4 &operator *= (const Matrix4 &matrix);
+			Matrix4 &operator - ();
 	};
 
-	vec4 operator * (mat4 lhs, const vec4 &columnVector);
-	mat4 operator * (mat4 lhs, const mat4 &rhs);
+	Vector4 operator * (Matrix4 lhs, const Vector4 &columnVector);
+	Matrix4 operator * (Matrix4 lhs, const Matrix4 &rhs);
 
-	GLfloat radians(const GLfloat angle);
+	float radians(const float angle);
 
-	mat4 perspective(GLfloat fov, GLfloat aspect, GLfloat near, GLfloat far);
-	mat4 ortographic(GLfloat bottom, GLfloat top, GLfloat left, GLfloat right, GLfloat near, GLfloat far);
-	mat4 lookAt(const vec3 &eye, const vec3 &target, const vec3 &up);
+	Matrix4 perspective(float fov, float aspect, float near, float far);
+	Matrix4 ortographic(float bottom, float top, float left, float right, float near, float far);
+	Matrix4 lookAt(const Vector3 &eye, const Vector3 &target, const Vector3 &up);
 
-	GLfloat dot(const vec3 &a, const vec3 &b);
-	vec3 cross(const vec3 &a, const vec3 &b);
-	vec3 normalize(const vec3 &a);
-	vec4 normalize(const vec4 &a);
+	float dot(const Vector3 &a, const Vector3 &b);
+	Vector3 cross(const Vector3 &a, const Vector3 &b);
+	Vector3 normalize(const Vector3 &a);
+	Vector4 normalize(const Vector4 &a);
 
-	void printVec(const vec3 &vec);
-	void printVec(const vec4 &vec);
-	void printMat(const mat4 &mat);
+	class Quaternion {
+		public:
+			static Quaternion delta(Vector3 from, Vector3 to);
+			static Quaternion lookAt(Vector3 forward, Vector3 up);
+
+			Quaternion();
+			Quaternion(const Vector3& axis, float angleRadians);
+			Quaternion(float pitch, float yaw, float roll);
+
+			Matrix4 matrix();
+			Matrix4 matrix() const;
+			Vector3 euler() const;
+			Vector3 axis();
+			void normalize();
+			void conjugate();
+
+			void set(const Quaternion& quat);
+			void set(const Vector3& vector, float w);
+
+			Quaternion &operator *= (const Quaternion &quat);
+		private:
+			float _x;
+			float _y;
+			float _z;
+			float _w;
+	};
+
+	Quaternion operator * (Quaternion lhs, const Quaternion &rhs);
+	Vector3 operator * (const Quaternion &quat, const Vector3 &vector);
+
+	void printVec(const Vector3 &vec);
+	void printVec(const Vector4 &vec);
+	void printMat(const Matrix4 &mat);
 }

@@ -10,8 +10,9 @@
 
 namespace apr = apparator;
 
-void compileShader(GLuint shaderId, const char* source) {
-	glShaderSource(shaderId, 1, &source, NULL);
+void compileShader(unsigned int shaderId, std::string source) {
+	const char* str = source.c_str();
+	glShaderSource(shaderId, 1, &str, NULL);
 	glCompileShader(shaderId);
 
 	int infoLogLength;
@@ -30,8 +31,8 @@ apr::Material::Material(std::string vertexShaderPath, std::string fragmentShader
 	this->id = glCreateProgram();
 
 	// Create the shaders
-	GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+	unsigned int vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+	unsigned int fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 
 	std::string vertexShaderSource = apr::readFile(vertexShaderPath);
 	std::string fragmentShaderSource = apr::readFile(fragmentShaderPath);
@@ -70,6 +71,6 @@ void apr::Material::bind() const {
 	glUseProgram(this->id);
 }
 
-GLuint apr::Material::uniformLocation(std::string name) {
+unsigned int apr::Material::uniformLocation(std::string name) {
 	return glGetUniformLocation(this->id, name.c_str());
 }
