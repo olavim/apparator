@@ -37,15 +37,15 @@ void apr::Transform::setRotation(const apr::Quaternion& quat) {
 	this->_rotation.normalize();
 }
 
-const apr::Vector3& apr::Transform::translation() {
+const apr::Vector3& apr::Transform::translation() const {
 	return this->_translation;
 }
 
-const apr::Vector3& apr::Transform::scale() {
+const apr::Vector3& apr::Transform::scale() const {
 	return this->_scale;
 }
 
-const apr::Quaternion& apr::Transform::rotation() {
+const apr::Quaternion& apr::Transform::rotation() const {
 	return this->_rotation;
 }
 

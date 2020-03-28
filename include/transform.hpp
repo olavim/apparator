@@ -12,9 +12,9 @@ namespace apparator {
 			void rotate(const Quaternion& quat);
 			void setRotation(const Quaternion& quat);
 			Matrix4 matrix() const;
-			const Vector3& translation();
-			const Vector3& scale();
-			const Quaternion& rotation();
+			const Vector3& translation() const;
+			const Vector3& scale() const;
+			const Quaternion& rotation() const;
 			Vector3 forward();
 			Vector3 right();
 			Vector3 up();

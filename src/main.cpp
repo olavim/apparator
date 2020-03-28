@@ -22,53 +22,53 @@ static const float window_height = 768;
 // Position, normal, color, texture coordinates
 static const float vertexData[] = {
 	// left - br,bl,tl
-	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
-	-1.0f,-1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
-	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
+	-1.0f,-1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
 	// left - br,tl,tr
-	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
-	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
+	-1.0f, 1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
 	// front - tr,bl,tl
-	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
-	-1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 0.0f, 1.0f,
+	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	-1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
 	// front - tr,br,bl
-	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 1.0f, 0.0f,
-	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	 1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
 	// bottom - tr,bl,br
-	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
-	 1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	 1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
 	// bottom - tr,tl,bl
-	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	-1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
 	// back - tr,br,bl
-	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 1.0f, 0.0f,
-	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 0.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
 	// back - tl,tr,bl
-	 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 0.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
+	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
 	// right - tr,bl,tl
-	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
-	 1.0f, 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f,
+	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	 1.0f, 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
 	// right - bl,tr,br
-	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
-	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f,-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
+	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	 1.0f,-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
 	// top - tr,br,bl
-	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
-	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	 1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
+	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
 	// top - tr,bl,tl
-	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
-	-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f
+	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f
 };
 
 VertexLayout vertexLayout({VertexElement(3), VertexElement(3), VertexElement(3), VertexElement(2)});
@@ -128,7 +128,7 @@ int main() {
 	glDepthFunc(GL_LESS);
 
 	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.2f, 0.3f, 0.5f, 0.0f);
 
 	InputManager inputMgr(window);
 	inputMgr.setAxisLabel("moveX", GLFW_KEY_A, GLFW_KEY_D);
@@ -140,9 +140,13 @@ int main() {
 	float aspect = window_width / window_height;
 	PerspectiveCamera pCamera(90, aspect);
 	OrtographicCamera oCamera(-5 * aspect, 5 * aspect, -5, 5);
-	pCamera.transform.translate(0, 0, 5);
 
-	Camera *activeCamera = &oCamera;
+	pCamera.transform.translate(-3, 3, 3);
+	pCamera.transform.setRotation(Quaternion::lookAt(pCamera.transform.translation() - model.transform.translation(), Vector3(0, 1, 0)));
+	oCamera.transform.translate(-3, 3, 3);
+	oCamera.transform.setRotation(Quaternion::lookAt(oCamera.transform.translation() - model.transform.translation(), Vector3(0, 1, 0)));
+
+	Camera *activeCamera = &pCamera;
 
 	double lastTime = glfwGetTime();
 	double speed = 3;
@@ -172,7 +176,6 @@ int main() {
 			Quaternion pitch(activeCamera->transform.right(), mouseSensitivity * -inputMgr.getMouseDeltaY());
 			activeCamera->transform.rotate(yaw * pitch);
 
-			// Scale model to get some kind of movement on the scene
 			model.transform.setScale((3 + sin(currentTime)) / 4, 1, 1);
 
 			// Draw model

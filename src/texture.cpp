@@ -28,6 +28,7 @@ apr::Texture::Texture(std::string filePath) {
 	}
 
 	stbi_image_free(data);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 apr::Texture::~Texture() {

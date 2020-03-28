@@ -26,12 +26,13 @@ void apr::Model::draw(const Camera* camera) {
 		ModelPart part = this->parts[i];
 
 		part.mesh.bind();
-		part.texture.bind();
+		// part.texture.bind();
 
 		part.shader.setMatrix4("u_worldMatrix", worldMatrix);
 		part.shader.setMatrix4("u_worldViewProjectionMatrix", worldViewProjectionMatrix);
 		part.shader.setMatrix4("u_inverseTransposeWorldViewMatrix", inverseTransposeWorldViewMatrix);
 		part.shader.setVector3("u_lightPosition", lightPosition);
+		part.shader.setVector3("u_viewPosition", camera->transform.translation());
 		part.shader.bind();
 
 		glDrawArrays(GL_TRIANGLES, 0, part.mesh.getVertexCount());

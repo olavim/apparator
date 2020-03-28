@@ -15,8 +15,8 @@ out vec2 v_texturePosition;
 
 void main() {
 	gl_Position = vec4(in_vertexPosition, 1) * u_worldViewProjectionMatrix;
-	f_position = vec3(u_worldMatrix * vec4(in_vertexPosition, 1.0));
+	f_position = vec3(vec4(in_vertexPosition, 1.0) * u_worldMatrix);
 	v_color = in_vertexColor;
-	v_normal = mat3(u_inverseTransposeWorldViewMatrix) * in_vertexNormal;
+	v_normal = in_vertexNormal * mat3(u_inverseTransposeWorldViewMatrix);
 	v_texturePosition = in_texturePosition;
 }
