@@ -24,12 +24,15 @@ namespace apparator {
 
 			void update();
 			void setCursorMode(const int mode);
+			void setKeyLabel(std::string label, int key);
 			void setAxisLabel(std::string label, int negativeKey, int positiveKey);
 			void setAxisLabel(std::string label, int joystickAxis);
 			double getMouseX();
 			double getMouseY();
 			double getMouseDeltaX();
 			double getMouseDeltaY();
+			bool getKey(std::string label);
+			bool getKey(std::string label, bool pressOnly);
 			float getAxis(std::string label);
 			float getAxis(std::string label, int joystick);
 		private:
@@ -41,9 +44,10 @@ namespace apparator {
 			double mouseDeltaX = 0;
 			double mouseDeltaY = 0;
 
-			int keyState[GLFW_KEY_LAST + 1];
+			bool keyState[GLFW_KEY_LAST + 1];
 			float* joystickAxes[GLFW_JOYSTICK_LAST + 1];
 
+			std::unordered_map<std::string, int> keyLabel;
 			std::unordered_map<std::string, KeyAxis> keyAxisLabel;
 			std::unordered_map<std::string, int> joystickAxisLabel;
 	};

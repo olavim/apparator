@@ -10,7 +10,7 @@
 #include "input.hpp"
 #include "resources.hpp"
 #include "mesh.hpp"
-#include "material.hpp"
+#include "shader.hpp"
 #include "texture.hpp"
 #include "model.hpp"
 
@@ -19,64 +19,63 @@ using namespace apparator;
 static const float window_width = 1024;
 static const float window_height = 768;
 
+// Position, normal, color, texture coordinates
 static const float vertexData[] = {
 	// left - br,bl,tl
-	-1.0f,-1.0f,-1.0f, 1, 1, 1, 1.0f, 0.0f,
-	-1.0f,-1.0f, 1.0f, 1, 1, 1, 0.0f, 0.0f,
-	-1.0f, 1.0f, 1.0f, 1, 1, 1, 0.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
+	-1.0f,-1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f,
 	// left - br,tl,tr
-	-1.0f,-1.0f,-1.0f, 1, 1, 1, 1.0f, 0.0f,
-	-1.0f, 1.0f, 1.0f, 1, 1, 1, 0.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f, 1, 1, 1, 1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f,
+	-1.0f, 1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
 	// front - tr,bl,tl
-	 1.0f, 1.0f,-1.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
-	-1.0f, 1.0f,-1.0f, 1, 1, 1, 0.0f, 1.0f,
+	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
+	-1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 0.0f, 1.0f,
 	// front - tr,br,bl
-	 1.0f, 1.0f,-1.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f,-1.0f,-1.0f, 1, 1, 1, 1.0f, 0.0f,
-	-1.0f,-1.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 1.0f, 1.0f,
+	 1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 1.0f, 0.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
 	// bottom - tr,bl,br
-	 1.0f,-1.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
-	 1.0f,-1.0f,-1.0f, 1, 1, 1, 1.0f, 0.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
 	// bottom - tr,tl,bl
-	 1.0f,-1.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f, 1, 1, 1, 0.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
+	-1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
 	// back - tr,br,bl
-	-1.0f, 1.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f, 1, 1, 1, 1.0f, 0.0f,
-	 1.0f,-1.0f, 1.0f, 1, 1, 1, 0.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
+	-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 1.0f, 0.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 0.0f, 0.0f,
 	// back - tl,tr,bl
-	 1.0f, 1.0f, 1.0f, 1, 1, 1, 0.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f,-1.0f, 1.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 0.0f, 1.0f,
+	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, 1, 0.0f, 0.0f,
 	// right - tr,bl,tl
-	 1.0f, 1.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f,-1.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
-	 1.0f, 1.0f,-1.0f, 1, 1, 1, 0.0f, 1.0f,
+	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
+	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f, 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f,
 	// right - bl,tr,br
-	 1.0f,-1.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
-	 1.0f, 1.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f,-1.0f, 1.0f, 1, 1, 1, 1.0f, 0.0f,
+	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
+	 1.0f,-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
 	// top - tr,br,bl
-	 1.0f, 1.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	 1.0f, 1.0f,-1.0f, 1, 1, 1, 1.0f, 0.0f,
-	-1.0f, 1.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
+	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
+	 1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 1.0f, 0.0f,
+	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
 	// top - tr,bl,tl
-	 1.0f, 1.0f, 1.0f, 1, 1, 1, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f, 1, 1, 1, 0.0f, 0.0f,
-	-1.0f, 1.0f, 1.0f, 1, 1, 1, 0.0f, 1.0f
+	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 1.0f, 1.0f,
+	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 0.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1, 1, 1, 0.0f, 1.0f
 };
 
-VertexLayout vertexLayout({VertexElement(3), VertexElement(3), VertexElement(2)});
+VertexLayout vertexLayout({VertexElement(3), VertexElement(3), VertexElement(3), VertexElement(2)});
 
-int main() {
-	// Initialise GLFW
+GLFWwindow* createWindow() {
 	if(!glfwInit()) {
-		fprintf(stderr, "Failed to initialize GLFW\n");
-		return -1;
+		throw std::runtime_error("Failed to initialize GLFW");
 	}
 
 	glfwWindowHint(GLFW_SAMPLES, 4);
@@ -88,21 +87,28 @@ int main() {
 	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Apparator", NULL, NULL);
 
 	if (!window) {
-		fprintf(stderr, "Failed to open GLFW window.\n");
-		glfwTerminate();
-		return -1;
+		throw std::runtime_error("Failed to open GLFW window");
 	}
 
 	// Tell GLFW which window is in use
 	glfwMakeContextCurrent(window);
 
-	// Initialize GLEW
+	return window;
+}
+
+void initGlew() {
 	glewExperimental = GL_TRUE;
 	GLenum glewStatus = glewInit();
 	if (glewStatus != GLEW_OK) {
-		fprintf(stderr, "Error: %s\n", glewGetErrorString(glewStatus));
-		return -1;
+		const char* message = reinterpret_cast<const char*>(glewGetErrorString(glewStatus));
+		throw std::runtime_error(message);
 	}
+}
+
+int main() {
+	GLFWwindow* window = createWindow();
+
+	initGlew();
 
 	// Create vertex array object
 	unsigned int VAO;
@@ -110,16 +116,13 @@ int main() {
 	glBindVertexArray(VAO);
 
 	ResourceManager resourceMgr;
-	Material *material = resourceMgr.loadMaterial("default", "shaders/vertex.glsl", "shaders/fragment.glsl");
+	Shader *shader = resourceMgr.loadShader("default", "shaders/vertex.glsl", "shaders/fragment.glsl");
 	Texture *texture = resourceMgr.loadTexture("wall", "textures/wall.jpg");
 
-	Mesh mesh(vertexLayout, sizeof(vertexData) / sizeof(float) / 8);
-	mesh.setVertexData(&vertexData[0]);
-	mesh.addPart(sizeof(vertexData) / sizeof(float) / 8);
+	Mesh mesh(vertexLayout, &vertexData[0], sizeof(vertexData) / sizeof(float) / 11);
 
-	Model model(mesh);
-	model.addTexture(texture);
-	model.addMaterial(material);
+	Model model;
+	model.addPart({mesh, *texture, *shader});
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -131,46 +134,60 @@ int main() {
 	inputMgr.setAxisLabel("moveX", GLFW_KEY_A, GLFW_KEY_D);
 	inputMgr.setAxisLabel("moveY", GLFW_KEY_LEFT_SHIFT, GLFW_KEY_SPACE);
 	inputMgr.setAxisLabel("moveZ", GLFW_KEY_W, GLFW_KEY_S);
+	inputMgr.setKeyLabel("quit", GLFW_KEY_ESCAPE);
+	inputMgr.setKeyLabel("changeCamera", GLFW_KEY_ENTER);
 
 	float aspect = window_width / window_height;
-	PerspectiveCamera camera(90, aspect);
-	// OrtographicCamera camera(-5 * aspect, 5 * aspect, -5, 5);
-	camera.transform.translate(0, 0, 5);
+	PerspectiveCamera pCamera(90, aspect);
+	OrtographicCamera oCamera(-5 * aspect, 5 * aspect, -5, 5);
+	pCamera.transform.translate(0, 0, 5);
 
-	unsigned int matrixId = material->uniformLocation("MVP");
+	Camera *activeCamera = &oCamera;
 
 	double lastTime = glfwGetTime();
 	double speed = 3;
 	double mouseSensitivity = 0.001;
 
-	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window)) {
-		// Clear the screen
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		inputMgr.update();
+	try {
+		while (!inputMgr.getKey("quit") && !glfwWindowShouldClose(window)) {
+			// Clear the screen
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		double currentTime = glfwGetTime();
-		float deltaTime = float(currentTime - lastTime);
-		lastTime = currentTime;
+			if (inputMgr.getKey("changeCamera", true)) {
+				activeCamera = (activeCamera == &oCamera)
+					? static_cast<Camera *>(&pCamera)
+					: static_cast<Camera *>(&oCamera);
+			}
 
-		Vector3 position(inputMgr.getAxis("moveX"), inputMgr.getAxis("moveY"), inputMgr.getAxis("moveZ"));
-		camera.transform.translate(position * deltaTime * speed);
+			double currentTime = glfwGetTime();
+			float deltaTime = float(currentTime - lastTime);
+			lastTime = currentTime;
 
-		Quaternion yaw(Vector3(0, 1, 0), mouseSensitivity * -inputMgr.getMouseDeltaX());
-		Quaternion pitch(camera.transform.right(), mouseSensitivity * -inputMgr.getMouseDeltaY());
-		camera.transform.rotate(yaw * pitch);
+			// Move camera
+			Vector3 position(inputMgr.getAxis("moveX"), inputMgr.getAxis("moveY"), inputMgr.getAxis("moveZ"));
+			activeCamera->transform.translate(position * deltaTime * speed);
 
-		model.transform.setScale((3 + sin(currentTime)) / 4, 1, 1);
+			// Rotate camera
+			Quaternion yaw(Vector3(0, 1, 0), mouseSensitivity * -inputMgr.getMouseDeltaX());
+			Quaternion pitch(activeCamera->transform.right(), mouseSensitivity * -inputMgr.getMouseDeltaY());
+			activeCamera->transform.rotate(yaw * pitch);
 
-		Matrix4 mvp = model.transform.matrix() * camera.matrix();
+			// Scale model to get some kind of movement on the scene
+			model.transform.setScale((3 + sin(currentTime)) / 4, 1, 1);
 
-		glUniformMatrix4fv(matrixId, 1, GL_FALSE, &mvp.m[0]);
+			// Draw model
+			model.draw(activeCamera);
 
-		model.draw();
+			// GLFW uses double buffering. Here we swap the buffer we render to with the one that is displayed.
+			glfwSwapBuffers(window);
 
-		// GLFW uses double buffering. Here we swap the buffer we render to with the one that is displayed.
-		glfwSwapBuffers(window);
-		// Update window events, such as key presses
-		glfwPollEvents();
+			// Update window events, such as key presses
+			glfwPollEvents();
+			inputMgr.update();
+		}
+	} catch (std::exception& err) {
+		std::cout << "Error during game loop\n";
+		std::cout << err.what() << std::endl;
 	}
 
 	// Cleanup

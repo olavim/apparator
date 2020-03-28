@@ -6,30 +6,15 @@
 
 namespace apr = apparator;
 
-apr::Mesh::Mesh(const apr::VertexLayout& lt, unsigned int vCount) : layout(lt), vertexCount(vCount) {
+apr::Mesh::Mesh(const apr::VertexLayout& lt, const void* data, unsigned int vCount)
+	: layout(lt), vertexData(data), vertexCount(vCount) {
 	glGenBuffers(1, &this->VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-	glBufferData(GL_ARRAY_BUFFER, this->vertexCount * this->layout.vertexSize(), NULL, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->vertexCount * this->layout.vertexSize(), data, GL_STATIC_DRAW);
 }
 
 apr::Mesh::~Mesh() {
 	glDeleteBuffers(1, &this->VBO);
-}
-
-void apr::Mesh::addPart(unsigned int vCount) {
-	this->parts.push_back(MeshPart(vCount));
-}
-
-unsigned int apr::Mesh::numParts() const {
-	return this->parts.size();
-}
-
-const apr::MeshPart& apr::Mesh::getPart(unsigned int index) const {
-	return this->parts[index];
-}
-
-void apr::Mesh::setVertexData(const void* data) {
-	glBufferData(GL_ARRAY_BUFFER, this->vertexCount * this->layout.vertexSize(), data, GL_STATIC_DRAW);
 }
 
 void apr::Mesh::bind() const {
@@ -47,6 +32,10 @@ void apr::Mesh::bind() const {
 
 		offset += elementSize;
 	}
+}
+
+unsigned int apr::Mesh::getVertexCount() const {
+	return this->vertexCount;
 }
 
 unsigned int apr::VertexLayout::vertexSize() const {

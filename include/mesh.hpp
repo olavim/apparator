@@ -19,26 +19,17 @@ namespace apparator {
 			std::vector<VertexElement> elements;
 	};
 
-	struct MeshPart {
-		unsigned int vertexCount;
-		MeshPart(unsigned int vCount) : vertexCount(vCount) {};
-	};
-
 	class Mesh {
 		public:
-			Mesh(const VertexLayout& layout, unsigned int vertexCount);
+			Mesh(const VertexLayout& layout, const void* vertexData, unsigned int vertexCount);
 			~Mesh();
 
-			void setVertexData(const void* data);
-			void addPart(unsigned int vertexCount);
-			const MeshPart& getPart(unsigned int index) const;
-			unsigned int numParts() const;
+			unsigned int getVertexCount() const;
 			void bind() const;
 		private:
-			std::vector<MeshPart> parts;
 			const VertexLayout& layout;
+			const void* vertexData;
 			unsigned int vertexCount;
 			unsigned int VBO;
-			void* vertexData;
 	};
 }

@@ -7,7 +7,7 @@
 namespace apparator {
 	class Camera {
 		public:
-			Matrix4 matrix();
+			Matrix4 matrix() const;
 			Transform transform;
 		protected:
 			Matrix4 projection;

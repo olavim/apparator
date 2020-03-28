@@ -26,7 +26,7 @@ apr::InputManager::InputManager(GLFWwindow *win) {
 	glfwSetInputMode(window, GLFW_CURSOR, CURSOR_MODE_CAPTURED);
 
 	glfwSetCursorPosCallback(this->window, apr::InputManager::cursorPosCallback);
-	glfwSetKeyCallback(this->window, apr::InputManager::keyCallback);
+	// glfwSetKeyCallback(this->window, apr::InputManager::keyCallback);
 
 	glfwPollEvents();
 	glfwGetCursorPos(this->window, &this->mouseX, &this->mouseY);
@@ -41,6 +41,10 @@ apr::InputManager::~InputManager() {
 
 void apr::InputManager::setCursorMode(const int mode) {
 	glfwSetInputMode(window, GLFW_CURSOR, mode);
+}
+
+void apr::InputManager::setKeyLabel(std::string label, int key) {
+	this->keyLabel[label] = key;
 }
 
 void apr::InputManager::setAxisLabel(std::string label, int negativeKey, int positiveKey) {
@@ -74,15 +78,39 @@ double apr::InputManager::getMouseDeltaY() {
 	return this->mouseDeltaY;
 }
 
+bool apr::InputManager::getKey(std::string label) {
+	return this->getKey(label, false);
+}
+
+bool apr::InputManager::getKey(std::string label, bool pressOnly) {
+	if (this->keyLabel.find(label) == this->keyLabel.end()) {
+		throw std::invalid_argument("Key with label '" + label + "' does not exist");
+	}
+
+	int key = this->keyLabel[label];
+	int state = glfwGetKey(this->window, key);
+
+	bool pressed = state == GLFW_PRESS;
+	bool pressedThisFrame = pressed && !this->keyState[key];
+
+	this->keyState[key] = pressed;
+
+	return pressOnly ? pressedThisFrame : pressed;
+}
+
 float apr::InputManager::getAxis(std::string label) {
+	if (this->keyAxisLabel.find(label) == this->keyAxisLabel.end()) {
+		throw std::invalid_argument("Axis with label '" + label + "' does not exist");
+	}
+
 	KeyAxis axis = this->keyAxisLabel[label];
 	float value = 0;
 
-	if (this->keyState[axis.negativeKey] == GLFW_PRESS || this->keyState[axis.negativeKey] == GLFW_REPEAT) {
+	if (glfwGetKey(this->window, axis.negativeKey) == GLFW_PRESS) {
 		value -= 1;
 	}
 
-	if (this->keyState[axis.positiveKey] == GLFW_PRESS || this->keyState[axis.positiveKey] == GLFW_REPEAT) {
+	if (glfwGetKey(this->window, axis.positiveKey) == GLFW_PRESS) {
 		value += 1;
 	}
 
@@ -91,8 +119,7 @@ float apr::InputManager::getAxis(std::string label) {
 
 float apr::InputManager::getAxis(std::string label, int joystick) {
 	if (this->joystickAxisLabel.find(label) == this->joystickAxisLabel.end()) {
-		// Axis with given label does not exist
-		return 0;
+		throw std::invalid_argument("Joystick axis with label '" + label + "' does not exist");
 	}
 
 	int axisKey = this->joystickAxisLabel[label];

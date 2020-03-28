@@ -5,7 +5,7 @@
 #include <string>
 #include <GL/glew.h>
 
-#include "material.hpp"
+#include "shader.hpp"
 #include "resources.hpp"
 
 namespace apr = apparator;
@@ -27,7 +27,7 @@ void compileShader(unsigned int shaderId, std::string source) {
 	}
 }
 
-apr::Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath) {
+apr::Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath) {
 	this->id = glCreateProgram();
 
 	// Create the shaders
@@ -63,14 +63,20 @@ apr::Material::Material(std::string vertexShaderPath, std::string fragmentShader
 	glDeleteShader(fragmentShaderId);
 }
 
-apr::Material::~Material() {
+apr::Shader::~Shader() {
 	glDeleteProgram(this->id);
 }
 
-void apr::Material::bind() const {
+void apr::Shader::bind() const {
 	glUseProgram(this->id);
 }
 
-unsigned int apr::Material::uniformLocation(std::string name) {
-	return glGetUniformLocation(this->id, name.c_str());
+void apr::Shader::setMatrix4(std::string name, const apr::Matrix4& matrix) const {
+	unsigned int uniformLocation = glGetUniformLocation(this->id, name.c_str());
+	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &matrix.m[0]);
+}
+
+void apr::Shader::setVector3(std::string name, const apr::Vector3& vector) const {
+	unsigned int uniformLocation = glGetUniformLocation(this->id, name.c_str());
+	glUniform3fv(uniformLocation, 1, &vector[0]);
 }

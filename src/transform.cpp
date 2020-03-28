@@ -49,7 +49,7 @@ const apr::Quaternion& apr::Transform::rotation() {
 	return this->_rotation;
 }
 
-apr::Matrix4 apr::Transform::matrix() {
+apr::Matrix4 apr::Transform::matrix() const {
 	apr::Matrix4 translation(
 		1, 0, 0, 0,
 		0, 1, 0, 0,

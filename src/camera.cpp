@@ -7,7 +7,7 @@
 
 namespace apr = apparator;
 
-apr::Matrix4 apr::Camera::matrix() {
+apr::Matrix4 apr::Camera::matrix() const {
 	apr::Matrix4 view = this->transform.matrix();
 	view.invert();
 	return view * this->projection;

@@ -93,6 +93,7 @@ namespace apparator {
 			float m[16];
 
 			Matrix4();
+			Matrix4(const Matrix4& matrix);
 			Matrix4(const float identity);
 			Matrix4(
 				float e00, float e01, float e02, float e03, float e10, float e11, float e12, float e13,

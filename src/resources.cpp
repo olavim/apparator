@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 
-#include "material.hpp"
+#include "shader.hpp"
 #include "texture.hpp"
 #include "resources.hpp"
 
@@ -26,7 +26,7 @@ std::string apr::readFile(std::string filePath) {
 }
 
 apr::ResourceManager::~ResourceManager() {
-	for (std::pair<std::string, apr::Material*> element : this->materials) {
+	for (std::pair<std::string, apr::Shader*> element : this->shaders) {
 		delete element.second;
 	}
 	for (std::pair<std::string, apr::Texture*> element : this->textures) {
@@ -34,9 +34,9 @@ apr::ResourceManager::~ResourceManager() {
 	}
 }
 
-apr::Material *apr::ResourceManager::loadMaterial(std::string name, std::string vertexShaderPath, std::string fragmentShaderPath) {
-	this->materials[name] = new apr::Material(vertexShaderPath, fragmentShaderPath);
-	return this->materials[name];
+apr::Shader *apr::ResourceManager::loadShader(std::string name, std::string vertexShaderPath, std::string fragmentShaderPath) {
+	this->shaders[name] = new apr::Shader(vertexShaderPath, fragmentShaderPath);
+	return this->shaders[name];
 }
 
 apr::Texture *apr::ResourceManager::loadTexture(std::string name, std::string texturePath) {

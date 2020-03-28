@@ -15,6 +15,10 @@ apr::Matrix4::Matrix4() {
 	);
 }
 
+apr::Matrix4::Matrix4(const Matrix4& matrix) {
+	memcpy(m, matrix.m, 16 * sizeof(float));
+}
+
 apr::Matrix4::Matrix4(const float identity) {
 	this->set(
 		identity, 0, 0, 0,

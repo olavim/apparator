@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <string>
 
-#include "material.hpp"
+#include "shader.hpp"
 #include "texture.hpp"
 
 namespace apparator {
@@ -13,10 +13,10 @@ namespace apparator {
 		public:
 			~ResourceManager();
 
-			Material *loadMaterial(std::string name, std::string vertexShaderPath, std::string fragmentShaderPath);
+			Shader *loadShader(std::string name, std::string vertexShaderPath, std::string fragmentShaderPath);
 			Texture *loadTexture(std::string name, std::string texturePath);
 		private:
-			std::unordered_map<std::string, Material*> materials;
+			std::unordered_map<std::string, Shader*> shaders;
 			std::unordered_map<std::string, Texture*> textures;
 	};
 }
