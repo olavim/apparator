@@ -80,3 +80,8 @@ void apr::Shader::setVector3(std::string name, const apr::Vector3& vector) const
 	unsigned int uniformLocation = glGetUniformLocation(this->id, name.c_str());
 	glUniform3fv(uniformLocation, 1, &vector[0]);
 }
+
+void apr::Shader::setFloat(std::string name, float value) const {
+	unsigned int uniformLocation = glGetUniformLocation(this->id, name.c_str());
+	glUniform1f(uniformLocation, value);
+}

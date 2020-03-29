@@ -1,17 +1,28 @@
 #version 330 core
 in vec3 f_position;
-in vec3 v_color;
 in vec3 v_normal;
 in vec2 v_texturePosition;
+
+struct Material {
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	float shininess;
+};
+
+struct Light {
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+};
 
 uniform sampler2D u_texture;
 uniform vec3 u_lightPosition;
 uniform vec3 u_viewPosition;
+uniform Material u_material;
+uniform Light u_light;
 
 out vec4 color;
-
-const vec3 ambientColor = vec3(0.3, 0.3, 0.3);
-const vec3 lightColor = vec3(1, 1, 1);
 
 void main() {
 	vec3 normal = normalize(v_normal);
@@ -28,16 +39,18 @@ void main() {
 	 * "directly above", and zero or smaller values when the light is not hitting the surface.
 	 */
 	float diffuseIntensity = max(dot(normal, lightDirection), 0.0);
-	vec3 diffuseColor = diffuseIntensity * lightColor;
 
 	/* Calculating the specular intensitity is similar to how we calculated the diffuse. The difference
 	 * here is that we determine the intensity based on the angle between the reflected light ray and
 	 * the view/eye position.
 	 */
-	float specularIntensity = pow(max(dot(viewDirection, reflectedLightDirection), 0.0), 32);
-	vec3 specularColor = 0.5 * specularIntensity * lightColor;
+	float specularIntensity = pow(max(dot(viewDirection, reflectedLightDirection), 0.0), u_material.shininess);
 
-	vec4 combinedLightColor = vec4((diffuseColor + specularColor + ambientColor) * v_color, 1.0);
+	vec3 ambientColor = u_light.ambient * u_material.ambient;
+	vec3 diffuseColor = u_light.diffuse * (diffuseIntensity * u_material.diffuse);
+	vec3 specularColor = u_light.specular * (specularIntensity * u_material.specular);
+
+	vec4 combinedLightColor = vec4(diffuseColor + specularColor + ambientColor, 1.0);
 	vec4 texturePixelColor = texture(u_texture, v_texturePosition);
 
 	// color = texturePixelColor * combinedLightColor;

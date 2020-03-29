@@ -12,6 +12,7 @@
 #include "mesh.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
+#include "material.hpp"
 #include "model.hpp"
 
 using namespace apparator;
@@ -19,59 +20,86 @@ using namespace apparator;
 static const float window_width = 1024;
 static const float window_height = 768;
 
-// Position, normal, color, texture coordinates
+// Position, normal, texture coordinates
 static const float vertexData[] = {
 	// left - br,bl,tl
-	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
-	-1.0f,-1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
-	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+	-1.0f,-1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 	// left - br,tl,tr
-	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
-	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+	-1.0f, 1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
 	// front - tr,bl,tl
-	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
-	-1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
+	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 0.0f,
+	-1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 1.0f,
 	// front - tr,br,bl
-	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	 1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
-	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	 1.0f, 1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 1.0f,
+	 1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 1.0f, 0.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 0.0f,
 	// bottom - tr,bl,br
-	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
-	 1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 0.0f, 0.0f,
+	 1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.0f,
 	// bottom - tr,tl,bl
-	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 1.0f, 1.0f,
+	-1.0f,-1.0f, 1.0f, 0.0f,-1.0f, 0.0f, 0.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f, 0.0f,-1.0f, 0.0f, 0.0f, 0.0f,
 	// back - tr,br,bl
-	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
-	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+	-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 	// back - tl,tr,bl
-	 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+	 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 	// right - tr,bl,tl
-	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
-	 1.0f, 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f,
+	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+	 1.0f, 1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 	// right - bl,tr,br
-	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
-	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	 1.0f,-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
+	 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+	 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+	 1.0f,-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 	// top - tr,br,bl
-	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	 1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 0.0f,
-	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
+	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+	 1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
 	// top - tr,bl,tl
-	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 0.0f,
-	-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.31f, 0.0f, 1.0f
+	 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+	-1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+	-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 };
 
-VertexLayout vertexLayout({VertexElement(3), VertexElement(3), VertexElement(3), VertexElement(2)});
+static VertexLayout vertexLayout({VertexElement(3), VertexElement(3), VertexElement(2)});
+
+static std::vector<Material> materials = {
+	Material({0.0215, 0.1745, 0.0215}, {0.07568, 0.61424, 0.07568}, {0.633, 0.727811, 0.633}, 76.8), // emerald
+	Material({0.135, 0.2225, 0.1575}, {0.54, 0.89, 0.63}, {0.316228, 0.316228, 0.316228}, 12.8), // jade
+	Material({0.05375, 0.05, 0.06625}, {0.18275, 0.17, 0.22525}, {0.332741, 0.328634, 0.346435}, 38.4), // obsidian
+	Material({0.25, 0.20725, 0.20725}, {1, 0.829, 0.829}, {0.296648, 0.296648, 0.296648}, 11.264), // pearl
+	Material({0.1745, 0.01175, 0.01175}, {0.61424, 0.04136, 0.04136}, {0.727811, 0.626959, 0.626959}, 76.8), // ruby
+	Material({0.1, 0.18725, 0.1745}, {0.396, 0.74151, 0.69102}, {0.297254, 0.30829, 0.306678}, 12.8), // turquoise
+	Material({0.329412, 0.223529, 0.027451}, {0.780392, 0.568627, 0.113725}, {0.992157, 0.941176, 0.807843}, 27.89743616), // brass
+	Material({0.2125, 0.1275, 0.054}, {0.714, 0.4284, 0.18144}, {0.393548, 0.271906, 0.166721}, 25.6), // bronze
+	Material({0.25, 0.25, 0.25}, {0.4, 0.4, 0.4}, {0.774597, 0.774597, 0.774597}, 76.8), // chrome
+	Material({0.19125, 0.0735, 0.0225}, {0.7038, 0.27048, 0.0828}, {0.256777, 0.137622, 0.086014}, 12.8), // copper
+	Material({0.24725, 0.1995, 0.0745}, {0.75164, 0.60648, 0.22648}, {0.628281, 0.555802, 0.366065}, 51.2), // gold
+	Material({0.19225, 0.19225, 0.19225}, {0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2), // silver
+	Material({0.0, 0.0, 0.0}, {0.01, 0.01, 0.01}, {0.50, 0.50, 0.50}, 32), // black plastic
+	Material({0.0, 0.1, 0.06}, {0.0, 0.50980392, 0.50980392}, {0.50196078, 0.50196078, 0.50196078}, 32), // cyan plastic
+	Material({0.0, 0.0, 0.0}, {0.1, 0.35, 0.1}, {0.45, 0.55, 0.45}, 32), // green plastic
+	Material({0.0, 0.0, 0.0}, {0.5, 0.0, 0.0}, {0.7, 0.6, 0.6}, 32), // red plastic
+	Material({0.0, 0.0, 0.0}, {0.55, 0.55, 0.55}, {0.70, 0.70, 0.70}, 32), // white plastic
+	Material({0.0, 0.0, 0.0}, {0.5, 0.5, 0.0}, {0.60, 0.60, 0.50}, 32), // yellow plastic
+	Material({0.02, 0.02, 0.02}, {0.01, 0.01, 0.01}, {0.4, 0.4, 0.4}, 10), // black rubber
+	Material({0.0, 0.05, 0.05}, {0.4, 0.5, 0.5}, {0.04, 0.7, 0.7}, 10), // cyan rubber
+	Material({0.0, 0.05, 0.0}, {0.4, 0.5, 0.4}, {0.04, 0.7, 0.04}, 10), // green rubber
+	Material({0.05, 0.0, 0.0}, {0.5, 0.4, 0.4}, {0.7, 0.04, 0.04}, 10), // red rubber
+	Material({0.05, 0.05, 0.05}, {0.5, 0.5, 0.5}, {0.7, 0.7, 0.7}, 10), // white rubber
+	Material({0.05, 0.05, 0.0}, {0.5, 0.5, 0.4}, {0.7, 0.7, 0.04}, 10) // yellow rubber
+};
 
 GLFWwindow* createWindow() {
 	if(!glfwInit()) {
@@ -119,10 +147,17 @@ int main() {
 	Shader *shader = resourceMgr.loadShader("default", "shaders/vertex.glsl", "shaders/fragment.glsl");
 	Texture *texture = resourceMgr.loadTexture("wall", "textures/wall.jpg");
 
-	Mesh mesh(vertexLayout, &vertexData[0], sizeof(vertexData) / sizeof(float) / 11);
+	Mesh mesh(vertexLayout, &vertexData[0], sizeof(vertexData) / sizeof(float) / 8);
 
-	Model model;
-	model.addPart({mesh, *texture, *shader});
+	std::vector<Model> models;
+	for (unsigned int i = 0; i < materials.size(); i++) {
+		int cols = ceil(sqrt(materials.size()));
+
+		Model m;
+		m.addPart({mesh, materials[i], *texture, *shader});
+		m.transform.translate({(float)floor(i / cols) * 3.0f - (cols * 1.2f), (i % cols) * 3.0f - (cols * 1.2f), 0});
+		models.push_back(m);
+	}
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -141,10 +176,10 @@ int main() {
 	PerspectiveCamera pCamera(90, aspect);
 	OrtographicCamera oCamera(-5 * aspect, 5 * aspect, -5, 5);
 
-	pCamera.transform.translate(-3, 3, 3);
-	pCamera.transform.setRotation(Quaternion::lookAt(pCamera.transform.translation() - model.transform.translation(), Vector3(0, 1, 0)));
-	oCamera.transform.translate(-3, 3, 3);
-	oCamera.transform.setRotation(Quaternion::lookAt(oCamera.transform.translation() - model.transform.translation(), Vector3(0, 1, 0)));
+	pCamera.transform.translate(-4, 4, 4);
+	pCamera.transform.setRotation(Quaternion::lookAt(pCamera.transform.translation(), Vector3(0, 1, 0)));
+	oCamera.transform.translate(-4, 4, 4);
+	oCamera.transform.setRotation(Quaternion::lookAt(oCamera.transform.translation(), Vector3(0, 1, 0)));
 
 	Camera *activeCamera = &pCamera;
 
@@ -176,10 +211,12 @@ int main() {
 			Quaternion pitch(activeCamera->transform.right(), mouseSensitivity * -inputMgr.getMouseDeltaY());
 			activeCamera->transform.rotate(yaw * pitch);
 
-			model.transform.setScale((3 + sin(currentTime)) / 4, 1, 1);
+			// model.transform.setScale((3 + sin(currentTime)) / 4, 1, 1);
 
-			// Draw model
-			model.draw(activeCamera);
+			for (unsigned int i = 0; i < models.size(); i++) {
+				// Draw model
+				models[i].draw(activeCamera);
+			}
 
 			// GLFW uses double buffering. Here we swap the buffer we render to with the one that is displayed.
 			glfwSwapBuffers(window);

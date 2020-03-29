@@ -5,14 +5,17 @@
 #include "mesh.hpp"
 #include "texture.hpp"
 #include "shader.hpp"
+#include "material.hpp"
 #include "transform.hpp"
 
 namespace apparator {
 	struct ModelPart {
 		const Mesh& mesh;
+		const Material& material;
 		const Texture& texture;
 		const Shader& shader;
-		ModelPart(const Mesh& m, const Texture& t, const Shader& s) : mesh(m), texture(t), shader(s) {};
+		ModelPart(const Mesh& m, const Material& mat, const Texture& t, const Shader& s)
+			: mesh(m), material(mat), texture(t), shader(s) {};
 	};
 
 	class Model {
