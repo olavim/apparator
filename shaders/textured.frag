@@ -4,9 +4,8 @@ in vec3 v_normal;
 in vec2 v_texturePosition;
 
 struct Material {
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
+	sampler2D diffuse;
+	sampler2D specular;
 	float shininess;
 };
 
@@ -16,7 +15,6 @@ struct Light {
 	vec3 specular;
 };
 
-uniform sampler2D u_texture;
 uniform vec3 u_lightPosition;
 uniform vec3 u_viewPosition;
 uniform Material u_material;
@@ -46,12 +44,14 @@ void main() {
 	 */
 	float specularIntensity = pow(max(dot(viewDirection, reflectedLightDirection), 0.0), u_material.shininess);
 
-	vec3 ambientColor = u_light.ambient * u_material.ambient;
-	vec3 diffuseColor = u_light.diffuse * (diffuseIntensity * u_material.diffuse);
-	vec3 specularColor = u_light.specular * (specularIntensity * u_material.specular);
+	vec3 diffuseTexColor = vec3(texture(u_material.diffuse, v_texturePosition));
+	vec3 specularTexColor = vec3(texture(u_material.specular, v_texturePosition));
+
+	vec3 ambientColor = u_light.ambient * diffuseTexColor;
+	vec3 diffuseColor = u_light.diffuse * diffuseIntensity * diffuseTexColor;
+	vec3 specularColor = u_light.specular * specularIntensity * specularTexColor;
 
 	vec4 combinedLightColor = vec4(diffuseColor + specularColor + ambientColor, 1.0);
-	vec4 texturePixelColor = texture(u_texture, v_texturePosition);
 
 	// color = texturePixelColor * combinedLightColor;
 	color = combinedLightColor;

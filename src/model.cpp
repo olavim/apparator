@@ -26,7 +26,7 @@ void apr::Model::draw(const Camera* camera) {
 		ModelPart part = this->parts[i];
 
 		part.mesh.bind();
-		// part.texture.bind();
+		part.shader.bind();
 
 		part.shader.setMatrix4("u_worldMatrix", worldMatrix);
 		part.shader.setMatrix4("u_worldViewProjectionMatrix", worldViewProjectionMatrix);
@@ -34,16 +34,27 @@ void apr::Model::draw(const Camera* camera) {
 		part.shader.setVector3("u_lightPosition", lightPosition);
 		part.shader.setVector3("u_viewPosition", camera->transform.translation());
 
-		part.shader.setVector3("u_material.ambient", part.material.ambient);
-		part.shader.setVector3("u_material.diffuse", part.material.diffuse);
-		part.shader.setVector3("u_material.specular", part.material.specular);
+		if (part.material.type == MaterialType::COLORED) {
+			part.shader.setVector3("u_material.ambient", part.material.ambientColor);
+			part.shader.setVector3("u_material.diffuse", part.material.diffuseColor);
+			part.shader.setVector3("u_material.specular", part.material.specularColor);
+		}
+
+		if (part.material.type == MaterialType::TEXTURED) {
+			part.shader.setInt("u_material.diffuse", 0);
+			glActiveTexture(GL_TEXTURE0);
+			part.material.diffuseMap->bind();
+
+			part.shader.setInt("u_material.specular", 1);
+			glActiveTexture(GL_TEXTURE1);
+			part.material.specularMap->bind();
+		}
+
 		part.shader.setFloat("u_material.shininess", part.material.shininess);
 
 		part.shader.setVector3("u_light.ambient", apr::Vector3(1, 1, 1));
 		part.shader.setVector3("u_light.diffuse", apr::Vector3(1, 1, 1));
 		part.shader.setVector3("u_light.specular", apr::Vector3(1, 1, 1));
-
-		part.shader.bind();
 
 		glDrawArrays(GL_TRIANGLES, 0, part.mesh.getVertexCount());
 	}

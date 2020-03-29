@@ -12,10 +12,8 @@ namespace apparator {
 	struct ModelPart {
 		const Mesh& mesh;
 		const Material& material;
-		const Texture& texture;
 		const Shader& shader;
-		ModelPart(const Mesh& m, const Material& mat, const Texture& t, const Shader& s)
-			: mesh(m), material(mat), texture(t), shader(s) {};
+		ModelPart(const Mesh& m, const Material& mat, const Shader& s) : mesh(m), material(mat), shader(s) {};
 	};
 
 	class Model {

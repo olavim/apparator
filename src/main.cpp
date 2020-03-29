@@ -144,17 +144,22 @@ int main() {
 	glBindVertexArray(VAO);
 
 	ResourceManager resourceMgr;
-	Shader *shader = resourceMgr.loadShader("default", "shaders/vertex.glsl", "shaders/fragment.glsl");
-	Texture *texture = resourceMgr.loadTexture("wall", "textures/wall.jpg");
+	Shader *colorShader = resourceMgr.loadShader("colored", "shaders/colored.vert", "shaders/colored.frag");
+	Shader *textureShader = resourceMgr.loadShader("textured", "shaders/textured.vert", "shaders/textured.frag");
+	Texture *containerDiff = resourceMgr.loadTexture("container_diff", "textures/container_diff.png");
+	Texture *containerSpec = resourceMgr.loadTexture("container_spec", "textures/container_spec.png");
 
-	Mesh mesh(vertexLayout, &vertexData[0], sizeof(vertexData) / sizeof(float) / 8);
+	materials.push_back(Material({containerDiff, containerSpec, 32}));
+
+	Mesh cubeMesh(vertexLayout, &vertexData[0], sizeof(vertexData) / sizeof(float) / 8);
 
 	std::vector<Model> models;
 	for (unsigned int i = 0; i < materials.size(); i++) {
 		int cols = ceil(sqrt(materials.size()));
 
 		Model m;
-		m.addPart({mesh, materials[i], *texture, *shader});
+		Shader *shader = materials[i].type == MaterialType::COLORED ? colorShader : textureShader;
+		m.addPart({cubeMesh, materials[i], *shader});
 		m.transform.translate({(float)floor(i / cols) * 3.0f - (cols * 1.2f), (i % cols) * 3.0f - (cols * 1.2f), 0});
 		models.push_back(m);
 	}

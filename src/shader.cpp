@@ -85,3 +85,8 @@ void apr::Shader::setFloat(std::string name, float value) const {
 	unsigned int uniformLocation = glGetUniformLocation(this->id, name.c_str());
 	glUniform1f(uniformLocation, value);
 }
+
+void apr::Shader::setInt(std::string name, int value) const {
+	unsigned int uniformLocation = glGetUniformLocation(this->id, name.c_str());
+	glUniform1i(uniformLocation, value);
+}
