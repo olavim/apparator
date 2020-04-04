@@ -15,6 +15,12 @@ void apr::Transform::translate(const Vector3& position) {
 	this->_translation += this->_rotation * position;
 }
 
+void apr::Transform::setTranslation(const Vector3& position) {
+	this->_translation[0] = position[0];
+	this->_translation[1] = position[1];
+	this->_translation[2] = position[2];
+}
+
 void apr::Transform::scale(float x, float y, float z) {
 	this->_scale[0] *= x;
 	this->_scale[1] *= y;
@@ -77,5 +83,9 @@ apr::Vector3 apr::Transform::up() {
 }
 
 apr::Vector3 apr::Transform::forward() {
+	return this->_rotation * Vector3(0, 0, 1);
+}
+
+apr::Vector3 apr::Transform::forward() const {
 	return this->_rotation * Vector3(0, 0, 1);
 }

@@ -9,22 +9,35 @@ struct Material {
 	float shininess;
 };
 
-struct Light {
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
+struct PointLight {
+	vec3 position;
+	vec3 color;
+	float linear;
+	float quadratic;
 };
 
-uniform vec3 u_lightPosition;
+struct SpotLight {
+	vec3 position;
+	vec3 direction;
+	vec3 color;
+	float innerAngle;
+	float outerAngle;
+};
+
+struct DirectionalLight {
+	vec3 direction;
+	vec3 color;
+};
+
 uniform vec3 u_viewPosition;
 uniform Material u_material;
-uniform Light u_light;
+uniform PointLight u_pointLight;
+uniform SpotLight u_spotLight;
+uniform DirectionalLight u_directionalLight;
 
 out vec4 color;
 
-void main() {
-	vec3 normal = normalize(v_normal);
-	vec3 lightDirection = normalize(u_lightPosition - f_position);
+vec3 computeLighting(vec3 normal, vec3 lightDirection, vec3 lightColor, vec3 diffuse, vec3 specular, float attenuation) {
 	vec3 reflectedLightDirection = reflect(-lightDirection, normal);
 	vec3 viewDirection = normalize(u_viewPosition - f_position);
 
@@ -44,15 +57,32 @@ void main() {
 	 */
 	float specularIntensity = pow(max(dot(viewDirection, reflectedLightDirection), 0.0), u_material.shininess);
 
-	vec3 diffuseTexColor = vec3(texture(u_material.diffuse, v_texturePosition));
-	vec3 specularTexColor = vec3(texture(u_material.specular, v_texturePosition));
+	vec3 diffuseColor = diffuseIntensity * diffuse;
+	vec3 specularColor = specularIntensity * specular;
 
-	vec3 ambientColor = u_light.ambient * diffuseTexColor;
-	vec3 diffuseColor = u_light.diffuse * diffuseIntensity * diffuseTexColor;
-	vec3 specularColor = u_light.specular * specularIntensity * specularTexColor;
+	return attenuation * lightColor * (diffuseColor + specularColor);
+}
 
-	vec4 combinedLightColor = vec4(diffuseColor + specularColor + ambientColor, 1.0);
+void main() {
+	vec3 normal = normalize(v_normal);
+	vec3 vertexToPointLightDirection = normalize(u_pointLight.position - f_position);
+	vec3 directionalLightDirection = normalize(-u_directionalLight.direction);
+	vec3 vertexToSpotLightDirection = normalize(u_spotLight.position - f_position);
 
-	// color = texturePixelColor * combinedLightColor;
-	color = combinedLightColor;
+	float distance = length(u_pointLight.position - f_position);
+	float pointLightAttenuation = 1.0 / (1 + u_pointLight.linear * distance + u_pointLight.quadratic * (distance * distance));
+
+	float theta = dot(vertexToSpotLightDirection, normalize(u_spotLight.direction));
+	float epsilon = u_spotLight.innerAngle - u_spotLight.outerAngle;
+	float spotLightAttenuation = clamp((theta - u_spotLight.outerAngle) / epsilon, 0.0, 1.0);
+
+	vec3 materialDiffuse = vec3(texture(u_material.diffuse, v_texturePosition));
+	vec3 materialSpecular = vec3(texture(u_material.specular, v_texturePosition));
+
+	vec3 combinedColor = materialDiffuse;
+	combinedColor += computeLighting(normal, vertexToPointLightDirection, u_pointLight.color, materialDiffuse, materialSpecular, pointLightAttenuation);
+	combinedColor += computeLighting(normal, vertexToSpotLightDirection, u_spotLight.color, materialDiffuse, materialSpecular, spotLightAttenuation);
+	combinedColor += computeLighting(normal, directionalLightDirection, u_directionalLight.color, materialDiffuse, materialSpecular, 1);
+
+	color = vec4(combinedColor, 1.0);
 }

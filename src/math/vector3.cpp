@@ -5,24 +5,6 @@
 
 namespace apr = apparator;
 
-apr::Vector3::Vector3() {
-	this->arr[0] = 0;
-	this->arr[1] = 0;
-	this->arr[2] = 0;
-}
-
-apr::Vector3::Vector3(float a, float b, float c) {
-	this->arr[0] = a;
-	this->arr[1] = b;
-	this->arr[2] = c;
-}
-
-apr::Vector3::Vector3(const apr::Vector3 &vector) {
-	this->arr[0] = vector[0];
-	this->arr[1] = vector[1];
-	this->arr[2] = vector[2];
-}
-
 float apr::Vector3::magnitude() {
 	float *a = this->arr;
 	return sqrt((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]));

@@ -72,6 +72,34 @@ static const float vertexData[] = {
 	-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 };
 
+Vector3 cubePositions[] = {
+	Vector3( 0.0f, 0.0f, 0.0f),
+	Vector3( 2.0f, 5.0f,-15.0f),
+	Vector3(-10.5f,-20.2f,-2.5f),
+	Vector3(-3.8f,-2.0f,-12.3f),
+	Vector3( 2.4f,-0.4f,-3.5f),
+	Vector3(-10.7f, 3.0f,-7.5f),
+	Vector3( 10.3f,-10.0f,-2.5f),
+	Vector3( 10.5f, 2.0f,-2.5f),
+	Vector3( 10.5f, -2.0f,-1.5f),
+	Vector3(-1.3f, 1.0f,-10.5f),
+	Vector3( 0.0f, 5.0f, 5.0f),
+	Vector3( 2.0f, 10.0f,-15.0f),
+	Vector3(-1.5f,-7.2f,-7.5f),
+	Vector3(-3.8f,-7.0f,-12.3f),
+	Vector3( 2.4f,-5.4f,-3.5f),
+	Vector3(-1.7f, 8.0f,-7.5f),
+	Vector3( 1.3f,-7.0f,-5.5f),
+	Vector3( 4.5f, 7.0f,-7.5f),
+	Vector3( 15.5f, 5.2f,-8.5f),
+	Vector3(-15.3f, 6.0f,-4.5f),
+	Vector3( 5.0f, 5.0f, 0.0f),
+	Vector3( 7.0f, 10.0f,-15.0f),
+	Vector3(-6.5f,-7.2f,-2.5f),
+	Vector3(-8.8f,-7.0f,-12.3f),
+	Vector3(-3.0f,-2.0f,-2.0f)
+};
+
 static VertexLayout vertexLayout({VertexElement(3), VertexElement(3), VertexElement(2)});
 
 static std::vector<Material> materials = {
@@ -160,7 +188,8 @@ int main() {
 		Model m;
 		Shader *shader = materials[i].type == MaterialType::COLORED ? colorShader : textureShader;
 		m.addPart({cubeMesh, materials[i], *shader});
-		m.transform.translate({(float)floor(i / cols) * 3.0f - (cols * 1.2f), (i % cols) * 3.0f - (cols * 1.2f), 0});
+		m.transform.translate(cubePositions[i]);
+		m.transform.rotate(Quaternion(rand(), rand(), rand()));
 		models.push_back(m);
 	}
 
@@ -189,7 +218,7 @@ int main() {
 	Camera *activeCamera = &pCamera;
 
 	double lastTime = glfwGetTime();
-	double speed = 3;
+	double speed = 10;
 	double mouseSensitivity = 0.001;
 
 	try {

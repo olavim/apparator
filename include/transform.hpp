@@ -7,6 +7,7 @@ namespace apparator {
 		public:
 			void translate(float x, float y, float z);
 			void translate(const Vector3& position);
+			void setTranslation(const Vector3& position);
 			void scale(float x, float y, float z);
 			void setScale(float x, float y, float z);
 			void rotate(const Quaternion& quat);
@@ -16,6 +17,7 @@ namespace apparator {
 			const Vector3& scale() const;
 			const Quaternion& rotation() const;
 			Vector3 forward();
+			Vector3 forward() const;
 			Vector3 right();
 			Vector3 up();
 

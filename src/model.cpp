@@ -3,11 +3,43 @@
 #include <string>
 
 #include "math.hpp"
+#include "transform.hpp"
 #include "camera.hpp"
 #include "texture.hpp"
 #include "model.hpp"
 
 namespace apr = apparator;
+
+class Light {
+	public:
+		apr::Transform transform;
+		apr::Vector3 color;
+
+		Light(apr::Vector3 c) : color(c) {}
+};
+
+class PointLight : public Light {
+	public:
+		float linear;
+		float quadratic;
+
+		PointLight(apr::Vector3 _color, float _linear, float _quadratic)
+			: Light(_color), linear(_linear), quadratic(_quadratic) {};
+};
+
+class SpotLight : public Light {
+	public:
+		float innerAngle;
+		float outerAngle;
+
+		SpotLight(apr::Vector3 _color, float _innerAngle, float _outerAngle)
+			: Light(_color), innerAngle(_innerAngle), outerAngle(_outerAngle) {};
+};
+
+class DirectionalLight : public Light {
+	public:
+		DirectionalLight(apr::Vector3 _color) : Light(_color) {};
+};
 
 void apr::Model::addPart(const ModelPart& part) {
 	this->parts.push_back(part);
@@ -20,7 +52,15 @@ void apr::Model::draw(const Camera* camera) {
 	inverseTransposeWorldViewMatrix.transpose();
 	inverseTransposeWorldViewMatrix.invert();
 
-	apr::Vector3 lightPosition(0, 0, 3);
+	PointLight pLight({1, 1, 1}, 0.045f, 0.0075f);
+	pLight.transform.setTranslation({0, 3, 0});
+
+	SpotLight sLight({1, 1, 1}, 0.9978, 0.953);
+	sLight.transform.setTranslation(camera->transform.translation());
+	sLight.transform.setRotation(camera->transform.rotation());
+
+	DirectionalLight dLight({1, 1, 1});
+	dLight.transform.setRotation({{1, 0, 0}, 1.5});
 
 	for (unsigned int i = 0; i < this->parts.size(); i++) {
 		ModelPart part = this->parts[i];
@@ -31,7 +71,6 @@ void apr::Model::draw(const Camera* camera) {
 		part.shader.setMatrix4("u_worldMatrix", worldMatrix);
 		part.shader.setMatrix4("u_worldViewProjectionMatrix", worldViewProjectionMatrix);
 		part.shader.setMatrix4("u_inverseTransposeWorldViewMatrix", inverseTransposeWorldViewMatrix);
-		part.shader.setVector3("u_lightPosition", lightPosition);
 		part.shader.setVector3("u_viewPosition", camera->transform.translation());
 
 		if (part.material.type == MaterialType::COLORED) {
@@ -52,9 +91,19 @@ void apr::Model::draw(const Camera* camera) {
 
 		part.shader.setFloat("u_material.shininess", part.material.shininess);
 
-		part.shader.setVector3("u_light.ambient", apr::Vector3(1, 1, 1));
-		part.shader.setVector3("u_light.diffuse", apr::Vector3(1, 1, 1));
-		part.shader.setVector3("u_light.specular", apr::Vector3(1, 1, 1));
+		part.shader.setVector3("u_pointLight.position", pLight.transform.translation());
+		part.shader.setVector3("u_pointLight.color", pLight.color);
+		part.shader.setFloat("u_pointLight.linear", pLight.linear);
+		part.shader.setFloat("u_pointLight.quadratic", pLight.quadratic);
+
+		part.shader.setVector3("u_spotLight.position", sLight.transform.translation());
+		part.shader.setVector3("u_spotLight.direction", sLight.transform.forward());
+		part.shader.setVector3("u_spotLight.color", sLight.color);
+		part.shader.setFloat("u_spotLight.innerAngle", sLight.innerAngle);
+		part.shader.setFloat("u_spotLight.outerAngle", sLight.outerAngle);
+
+		part.shader.setVector3("u_directionalLight.direction", dLight.transform.forward());
+		part.shader.setVector3("u_directionalLight.color", dLight.color);
 
 		glDrawArrays(GL_TRIANGLES, 0, part.mesh.getVertexCount());
 	}
