@@ -23,12 +23,12 @@ apr::Vector2::Vector2(const apr::Vector2 &vector) {
 
 float apr::Vector2::magnitude() {
 	float *a = this->arr;
-	return sqrt((a[0] * a[0]) + (a[1] * a[1]));
+	return sqrtf((a[0] * a[0]) + (a[1] * a[1]));
 }
 
 float apr::Vector2::magnitude() const {
 	const float *a = this->arr;
-	return sqrt((a[0] * a[0]) + (a[1] * a[1]));
+	return sqrtf((a[0] * a[0]) + (a[1] * a[1]));
 }
 
 float &apr::Vector2::operator [] (const int index) {

@@ -42,12 +42,12 @@ apr::Vector4::Vector4(float d, const apr::Vector3 &vector) {
 
 float apr::Vector4::magnitude() {
 	float *a = this->arr;
-	return sqrt((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]) + (a[3] * a[3]));
+	return sqrtf((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]) + (a[3] * a[3]));
 }
 
 float apr::Vector4::magnitude() const {
 	const float *a = this->arr;
-	return sqrt((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]) + (a[3] * a[3]));
+	return sqrtf((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]) + (a[3] * a[3]));
 }
 
 float &apr::Vector4::operator [] (const int index) {

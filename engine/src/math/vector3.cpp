@@ -7,12 +7,12 @@ namespace apr = apparator;
 
 float apr::Vector3::magnitude() {
 	float *a = this->arr;
-	return sqrt((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]));
+	return sqrtf((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]));
 }
 
 float apr::Vector3::magnitude() const {
 	const float *a = this->arr;
-	return sqrt((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]));
+	return sqrtf((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]));
 }
 
 float &apr::Vector3::operator [] (const int index) {

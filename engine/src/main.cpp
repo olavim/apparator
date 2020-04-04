@@ -17,8 +17,8 @@
 
 using namespace apparator;
 
-static const float window_width = 1024;
-static const float window_height = 768;
+static const int window_width = 1024;
+static const int window_height = 768;
 
 // Position, normal, texture coordinates
 static const float vertexData[] = {
@@ -204,7 +204,7 @@ int main() {
 	inputMgr.setKeyLabel("quit", GLFW_KEY_ESCAPE);
 	inputMgr.setKeyLabel("changeCamera", GLFW_KEY_ENTER);
 
-	float aspect = window_width / window_height;
+	float aspect = static_cast<float>(window_width) / static_cast<float>(window_height);
 	PerspectiveCamera pCamera(90, aspect);
 	OrtographicCamera oCamera(-5 * aspect, 5 * aspect, -5, 5);
 

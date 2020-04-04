@@ -8,7 +8,7 @@ namespace apparator {
 		public:
 			unsigned int id;
 
-			Texture() : id(0) {};
+			Texture() : id(0), width(0), height(0) {};
 			Texture(std::string filePath);
 			~Texture();
 

@@ -1,6 +1,7 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include <string>
+#include <stdexcept>
 #include "input.hpp"
 
 namespace apr = apparator;

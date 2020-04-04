@@ -64,8 +64,8 @@ apr::Vector3 apr::normalize(const apr::Vector3 &vector) {
 
 apr::Matrix4 apr::perspective(float fov, float aspect, float near, float far) {
 	return apr::Matrix4(
-		1 / (aspect * tan(fov / 2)), 0, 0, 0,
-		0, 1 / tan(fov / 2), 0, 0,
+		1 / (aspect * tanf(fov / 2)), 0, 0, 0,
+		0, 1 / tanf(fov / 2), 0, 0,
 		0, 0, -(far + near) / (far - near), -1,
 		0, 0, -(2 * far * near) / (far - near), 0
 	);

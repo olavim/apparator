@@ -4,7 +4,7 @@
 #include "texture.hpp"
 
 namespace apparator {
-	enum MaterialType {
+	enum class MaterialType {
 		COLORED,
 		TEXTURED
 	};
@@ -19,9 +19,11 @@ namespace apparator {
 		MaterialType type;
 
 		Material(Vector3 amb, Vector3 dif, Vector3 spec, float s)
-			: ambientColor(amb), diffuseColor(dif), specularColor(spec), shininess(s), type(MaterialType::COLORED) {};
+			: ambientColor(amb), diffuseColor(dif), specularColor(spec), diffuseMap(), specularMap(),
+				shininess(s), type(MaterialType::COLORED) {};
 
 		Material(const Texture* dif, const Texture* spec, float s)
-			: diffuseMap(dif), specularMap(spec), shininess(s), type(MaterialType::TEXTURED) {};
+			: ambientColor(), diffuseColor(), specularColor(), diffuseMap(dif), specularMap(spec),
+				shininess(s), type(MaterialType::TEXTURED) {};
 	};
 }
