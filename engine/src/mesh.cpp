@@ -43,11 +43,11 @@ unsigned int apr::VertexLayout::vertexSize() const {
 	for (unsigned int i = 0; i < this->numElements(); i++) {
 		size += this->getElement(i).size;
 	}
-	return size * sizeof(float);
+	return size * static_cast<unsigned int>(sizeof(float));
 }
 
 unsigned int apr::VertexLayout::numElements() const {
-	return this->elements.size();
+	return static_cast<unsigned int>(this->elements.size());
 }
 
 const apr::VertexElement& apr::VertexLayout::getElement(unsigned int index) const {

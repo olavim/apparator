@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-
+#include <math.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -103,30 +103,30 @@ Vector3 cubePositions[] = {
 static VertexLayout vertexLayout({VertexElement(3), VertexElement(3), VertexElement(2)});
 
 static std::vector<Material> materials = {
-	Material({0.0215, 0.1745, 0.0215}, {0.07568, 0.61424, 0.07568}, {0.633, 0.727811, 0.633}, 76.8), // emerald
-	Material({0.135, 0.2225, 0.1575}, {0.54, 0.89, 0.63}, {0.316228, 0.316228, 0.316228}, 12.8), // jade
-	Material({0.05375, 0.05, 0.06625}, {0.18275, 0.17, 0.22525}, {0.332741, 0.328634, 0.346435}, 38.4), // obsidian
-	Material({0.25, 0.20725, 0.20725}, {1, 0.829, 0.829}, {0.296648, 0.296648, 0.296648}, 11.264), // pearl
-	Material({0.1745, 0.01175, 0.01175}, {0.61424, 0.04136, 0.04136}, {0.727811, 0.626959, 0.626959}, 76.8), // ruby
-	Material({0.1, 0.18725, 0.1745}, {0.396, 0.74151, 0.69102}, {0.297254, 0.30829, 0.306678}, 12.8), // turquoise
-	Material({0.329412, 0.223529, 0.027451}, {0.780392, 0.568627, 0.113725}, {0.992157, 0.941176, 0.807843}, 27.89743616), // brass
-	Material({0.2125, 0.1275, 0.054}, {0.714, 0.4284, 0.18144}, {0.393548, 0.271906, 0.166721}, 25.6), // bronze
-	Material({0.25, 0.25, 0.25}, {0.4, 0.4, 0.4}, {0.774597, 0.774597, 0.774597}, 76.8), // chrome
-	Material({0.19125, 0.0735, 0.0225}, {0.7038, 0.27048, 0.0828}, {0.256777, 0.137622, 0.086014}, 12.8), // copper
-	Material({0.24725, 0.1995, 0.0745}, {0.75164, 0.60648, 0.22648}, {0.628281, 0.555802, 0.366065}, 51.2), // gold
-	Material({0.19225, 0.19225, 0.19225}, {0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2), // silver
-	Material({0.0, 0.0, 0.0}, {0.01, 0.01, 0.01}, {0.50, 0.50, 0.50}, 32), // black plastic
-	Material({0.0, 0.1, 0.06}, {0.0, 0.50980392, 0.50980392}, {0.50196078, 0.50196078, 0.50196078}, 32), // cyan plastic
-	Material({0.0, 0.0, 0.0}, {0.1, 0.35, 0.1}, {0.45, 0.55, 0.45}, 32), // green plastic
-	Material({0.0, 0.0, 0.0}, {0.5, 0.0, 0.0}, {0.7, 0.6, 0.6}, 32), // red plastic
-	Material({0.0, 0.0, 0.0}, {0.55, 0.55, 0.55}, {0.70, 0.70, 0.70}, 32), // white plastic
-	Material({0.0, 0.0, 0.0}, {0.5, 0.5, 0.0}, {0.60, 0.60, 0.50}, 32), // yellow plastic
-	Material({0.02, 0.02, 0.02}, {0.01, 0.01, 0.01}, {0.4, 0.4, 0.4}, 10), // black rubber
-	Material({0.0, 0.05, 0.05}, {0.4, 0.5, 0.5}, {0.04, 0.7, 0.7}, 10), // cyan rubber
-	Material({0.0, 0.05, 0.0}, {0.4, 0.5, 0.4}, {0.04, 0.7, 0.04}, 10), // green rubber
-	Material({0.05, 0.0, 0.0}, {0.5, 0.4, 0.4}, {0.7, 0.04, 0.04}, 10), // red rubber
-	Material({0.05, 0.05, 0.05}, {0.5, 0.5, 0.5}, {0.7, 0.7, 0.7}, 10), // white rubber
-	Material({0.05, 0.05, 0.0}, {0.5, 0.5, 0.4}, {0.7, 0.7, 0.04}, 10) // yellow rubber
+	Material({0.0215f, 0.1745f, 0.0215f}, {0.07568f, 0.61424f, 0.07568f}, {0.633f, 0.727811f, 0.633f}, 76.8f), // emerald
+	Material({0.135f, 0.2225f, 0.1575f}, {0.54f, 0.89f, 0.63f}, {0.316228f, 0.316228f, 0.316228f}, 12.8f), // jade
+	Material({0.05375f, 0.05f, 0.06625f}, {0.18275f, 0.17f, 0.22525f}, {0.332741f, 0.328634f, 0.346435f}, 38.4f), // obsidian
+	Material({0.25f, 0.20725f, 0.20725f}, {1, 0.829f, 0.829f}, {0.296648f, 0.296648f, 0.296648f}, 11.264f), // pearl
+	Material({0.1745f, 0.01175f, 0.01175f}, {0.61424f, 0.04136f, 0.04136f}, {0.727811f, 0.626959f, 0.626959f}, 76.8f), // ruby
+	Material({0.1f, 0.18725f, 0.1745f}, {0.396f, 0.74151f, 0.69102f}, {0.297254f, 0.30829f, 0.306678f}, 12.8f), // turquoise
+	Material({0.329412f, 0.223529f, 0.027451f}, {0.780392f, 0.568627f, 0.113725f}, {0.992157f, 0.941176f, 0.807843f}, 27.89743616f), // brass
+	Material({0.2125f, 0.1275f, 0.054f}, {0.714f, 0.4284f, 0.18144f}, {0.393548f, 0.271906f, 0.166721f}, 25.6f), // bronze
+	Material({0.25f, 0.25f, 0.25f}, {0.4f, 0.4f, 0.4f}, {0.774597f, 0.774597f, 0.774597f}, 76.8f), // chrome
+	Material({0.19125f, 0.0735f, 0.0225f}, {0.7038f, 0.27048f, 0.0828f}, {0.256777f, 0.137622f, 0.086014f}, 12.8f), // copper
+	Material({0.24725f, 0.1995f, 0.0745f}, {0.75164f, 0.60648f, 0.22648f}, {0.628281f, 0.555802f, 0.366065f}, 51.2f), // gold
+	Material({0.19225f, 0.19225f, 0.19225f}, {0.50754f, 0.50754f, 0.50754f}, {0.508273f, 0.508273f, 0.508273f}, 51.2f), // silver
+	Material({0.0f, 0.0f, 0.0f}, {0.01f, 0.01f, 0.01f}, {0.50f, 0.50f, 0.50f}, 32), // black plastic
+	Material({0.0f, 0.1f, 0.06f}, {0.0f, 0.50980392f, 0.50980392f}, {0.50196078f, 0.50196078f, 0.50196078f}, 32), // cyan plastic
+	Material({0.0f, 0.0f, 0.0f}, {0.1f, 0.35f, 0.1f}, {0.45f, 0.55f, 0.45f}, 32), // green plastic
+	Material({0.0f, 0.0f, 0.0f}, {0.5f, 0.0f, 0.0f}, {0.7f, 0.6f, 0.6f}, 32), // red plastic
+	Material({0.0f, 0.0f, 0.0f}, {0.55f, 0.55f, 0.55f}, {0.70f, 0.70f, 0.70f}, 32), // white plastic
+	Material({0.0f, 0.0f, 0.0f}, {0.5f, 0.5f, 0.0f}, {0.60f, 0.60f, 0.50f}, 32), // yellow plastic
+	Material({0.02f, 0.02f, 0.02f}, {0.01f, 0.01f, 0.01f}, {0.4f, 0.4f, 0.4f}, 10), // black rubber
+	Material({0.0f, 0.05f, 0.05f}, {0.4f, 0.5f, 0.5f}, {0.04f, 0.7f, 0.7f}, 10), // cyan rubber
+	Material({0.0f, 0.05f, 0.0f}, {0.4f, 0.5f, 0.4f}, {0.04f, 0.7f, 0.04f}, 10), // green rubber
+	Material({0.05f, 0.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {0.7f, 0.04f, 0.04f}, 10), // red rubber
+	Material({0.05f, 0.05f, 0.05f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.7f, 0.7f}, 10), // white rubber
+	Material({0.05f, 0.05f, 0.0f}, {0.5f, 0.5f, 0.4f}, {0.7f, 0.7f, 0.04f}, 10) // yellow rubber
 };
 
 GLFWwindow* createWindow() {
@@ -183,13 +183,11 @@ int main() {
 
 	std::vector<Model> models;
 	for (unsigned int i = 0; i < materials.size(); i++) {
-		int cols = ceil(sqrt(materials.size()));
-
 		Model m;
 		Shader *shader = materials[i].type == MaterialType::COLORED ? colorShader : textureShader;
 		m.addPart({cubeMesh, materials[i], *shader});
 		m.transform.translate(cubePositions[i]);
-		m.transform.rotate(Quaternion(rand(), rand(), rand()));
+		m.transform.rotate(Quaternion(static_cast<float>(rand()), static_cast<float>(rand()), static_cast<float>(rand())));
 		models.push_back(m);
 	}
 
@@ -218,8 +216,8 @@ int main() {
 	Camera *activeCamera = &pCamera;
 
 	double lastTime = glfwGetTime();
-	double speed = 10;
-	double mouseSensitivity = 0.001;
+	float speed = 10;
+	float mouseSensitivity = 0.001f;
 
 	try {
 		while (!inputMgr.getKey("quit") && !glfwWindowShouldClose(window)) {
@@ -241,8 +239,8 @@ int main() {
 			activeCamera->transform.translate(position * deltaTime * speed);
 
 			// Rotate camera
-			Quaternion yaw(Vector3(0, 1, 0), mouseSensitivity * -inputMgr.getMouseDeltaX());
-			Quaternion pitch(activeCamera->transform.right(), mouseSensitivity * -inputMgr.getMouseDeltaY());
+			Quaternion yaw(Vector3(0, 1, 0), mouseSensitivity * -static_cast<float>(inputMgr.getMouseDeltaX()));
+			Quaternion pitch(activeCamera->transform.right(), mouseSensitivity * -static_cast<float>(inputMgr.getMouseDeltaY()));
 			activeCamera->transform.rotate(yaw * pitch);
 
 			// model.transform.setScale((3 + sin(currentTime)) / 4, 1, 1);

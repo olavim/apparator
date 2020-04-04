@@ -55,7 +55,7 @@ void apr::Model::draw(const Camera* camera) {
 	PointLight pLight({1, 1, 1}, 0.045f, 0.0075f);
 	pLight.transform.setTranslation({0, 3, 0});
 
-	SpotLight sLight({1, 1, 1}, 0.9978, 0.953);
+	SpotLight sLight({1, 1, 1}, 0.9978f, 0.953f);
 	sLight.transform.setTranslation(camera->transform.translation());
 	sLight.transform.setRotation(camera->transform.rotation());
 

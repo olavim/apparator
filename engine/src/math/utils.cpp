@@ -23,7 +23,7 @@ void apr::printMat(const apr::Matrix4 &mat) {
 }
 
 float apr::radians(const float angle) {
-	return (M_PI / 180) * angle;
+	return static_cast<float>(M_PI / 180.0f) * angle;
 }
 
 float apr::dot(const apr::Vector3 &a, const apr::Vector3 &b) {

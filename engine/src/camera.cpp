@@ -14,9 +14,9 @@ apr::Matrix4 apr::Camera::matrix() const {
 }
 
 apr::PerspectiveCamera::PerspectiveCamera(float fov, float aspectRatio) {
-	this->projection = apr::perspective(radians(fov), aspectRatio, 0.1, 100);
+	this->projection = apr::perspective(radians(fov), aspectRatio, 0.1f, 100.0f);
 }
 
 apr::OrtographicCamera::OrtographicCamera(float left, float right, float bottom, float top) {
-	this->projection = apr::ortographic(left, right, bottom, top, -100, 100);
+	this->projection = apr::ortographic(left, right, bottom, top, -100.0f, 100.0f);
 }
