@@ -1,9 +1,6 @@
 [submodule "libs/glfw"]
-	path = libs/glfw
+	path = libs/glfw-3.0
 	url = https://github.com/glfw/glfw
-[submodule "libs/glew"]
-	path = libs/glew
-	url = https://github.com/nigels-com/glew
 [submodule "libs/glew-cmake"]
-	path = libs/glew-cmake
+	path = libs/glew-cmake-2.1.0
 	url = https://github.com/Perlmint/glew-cmake
