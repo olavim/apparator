@@ -36,12 +36,9 @@ add_executable(engine ${HEADER_FILES} ${SOURCE_FILES})
 
 message(STATUS "Checking dependencies")
 find_package(OpenGL 3 REQUIRED COMPONENTS OpenGL)
-find_package(GLEW REQUIRED)
 
 message(STATUS "Linking dependencies")
-target_link_libraries(engine OpenGL::GL)
-target_link_libraries(engine GLEW::GLEW)
-target_link_libraries(engine glfw)
+target_link_libraries(engine OpenGL::GL libglew_static glfw)
 
 add_custom_target(
 	copy-runtime-files ALL
