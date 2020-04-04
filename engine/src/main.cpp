@@ -172,10 +172,10 @@ int main() {
 	glBindVertexArray(VAO);
 
 	ResourceManager resourceMgr;
-	Shader *colorShader = resourceMgr.loadShader("colored", "shaders/colored.vert", "shaders/colored.frag");
-	Shader *textureShader = resourceMgr.loadShader("textured", "shaders/textured.vert", "shaders/textured.frag");
-	Texture *containerDiff = resourceMgr.loadTexture("container_diff", "textures/container_diff.png");
-	Texture *containerSpec = resourceMgr.loadTexture("container_spec", "textures/container_spec.png");
+	Shader *colorShader = resourceMgr.loadShader("colored", "resources/shaders/colored.vert", "resources/shaders/colored.frag");
+	Shader *textureShader = resourceMgr.loadShader("textured", "resources/shaders/textured.vert", "resources/shaders/textured.frag");
+	Texture *containerDiff = resourceMgr.loadTexture("container_diff", "resources/textures/container_diff.png");
+	Texture *containerSpec = resourceMgr.loadTexture("container_spec", "resources/textures/container_spec.png");
 
 	materials.push_back(Material({containerDiff, containerSpec, 32}));
 
