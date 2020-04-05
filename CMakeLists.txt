@@ -18,3 +18,6 @@ endforeach()
 
 add_subdirectory(thirdparty)
 add_subdirectory(engine)
+
+set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT engine)
+set_property(TARGET engine PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
