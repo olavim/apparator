@@ -43,4 +43,4 @@ message(STATUS "Checking dependencies")
 find_package(OpenGL 3 REQUIRED COMPONENTS OpenGL)
 
 message(STATUS "Linking dependencies")
-target_link_libraries(engine OpenGL::GL libglew_static glfw)
+target_link_libraries(engine OpenGL::GL libglew_static glfw assimp)
