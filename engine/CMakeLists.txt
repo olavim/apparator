@@ -1,3 +1,7 @@
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 if (MSVC)
 	# warning level 3 and all warnings as errors
 	add_compile_options(/W3 /WX /EHsc)
@@ -40,10 +44,3 @@ find_package(OpenGL 3 REQUIRED COMPONENTS OpenGL)
 
 message(STATUS "Linking dependencies")
 target_link_libraries(engine OpenGL::GL libglew_static glfw)
-
-add_custom_target(
-	copy-runtime-files ALL
-	COMMAND ${CMAKE_COMMAND} -E copy_directory
-					${CMAKE_CURRENT_SOURCE_DIR}/resources
-					${CMAKE_CURRENT_BINARY_DIR}/resources
-)
