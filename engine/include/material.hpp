@@ -7,7 +7,6 @@ class aiMaterial;
 
 namespace apparator {
 	class Texture;
-	class ResourceManager;
 	class Shader;
 
 	class Material {
@@ -20,7 +19,7 @@ namespace apparator {
 			float shininess;
 			const Shader* shader;
 
-			Material(const aiMaterial *material, std::string modelDirectory, ResourceManager& resMgr);
+			Material(const aiMaterial *material, std::string modelDirectory);
 
 			Material(Vector3 amb, Vector3 dif, Vector3 spec, float s, const Shader* sh)
 				: ambientColor(amb), diffuseColor(dif), specularColor(spec), diffuseMap(), specularMap(),

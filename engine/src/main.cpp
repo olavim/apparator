@@ -159,11 +159,10 @@ int main() {
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	ResourceManager resourceMgr;
-	Shader *colorShader = resourceMgr.loadShader("colored", "resources/shaders/colored.vert", "resources/shaders/colored.frag");
-	Shader *textureShader = resourceMgr.loadShader("textured", "resources/shaders/textured.vert", "resources/shaders/textured.frag");
-	Texture *containerDiff = resourceMgr.loadTexture("container_diff", "resources/textures/container_diff.png");
-	Texture *containerSpec = resourceMgr.loadTexture("container_spec", "resources/textures/container_spec.png");
+	Shader *colorShader = ResourceManager::loadShader("colored", "resources/shaders/colored.vert", "resources/shaders/colored.frag");
+	Shader *textureShader = ResourceManager::loadShader("textured", "resources/shaders/textured.vert", "resources/shaders/textured.frag");
+	Texture *containerDiff = ResourceManager::loadTexture("container_diff", "resources/textures/container_diff.png");
+	Texture *containerSpec = ResourceManager::loadTexture("container_spec", "resources/textures/container_spec.png");
 
 	std::vector<Material> materials = {
 		Material({0.0215f, 0.1745f, 0.0215f}, {0.07568f, 0.61424f, 0.07568f}, {0.633f, 0.727811f, 0.633f}, 76.8f, colorShader), // emerald
@@ -194,7 +193,7 @@ int main() {
 	};
 
 	std::vector<Model*> models;
-	Model *crysisNanoSuit = resourceMgr.loadModel("nanosuit", "resources/models/nanosuit/nanosuit.obj");
+	Model *crysisNanoSuit = ResourceManager::loadModel("nanosuit", "resources/models/nanosuit/nanosuit.obj");
 	models.push_back(crysisNanoSuit);
 
 	// Mesh cubeMesh(vertexLayout, vertexData);

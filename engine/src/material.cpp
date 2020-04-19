@@ -9,14 +9,14 @@
 
 namespace apr = apparator;
 
-apr::Material::Material(const aiMaterial *material, std::string modelDirectory, ResourceManager& resMgr) {
+apr::Material::Material(const aiMaterial *material, std::string modelDirectory) {
 		aiString diffuseTexPath;
 		aiString specularTexPath;
 		aiReturn diffuseTexStatus = material->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseTexPath);
 		aiReturn specularTexStatus = material->GetTexture(aiTextureType_SPECULAR, 0, &specularTexPath);
 
 		if (diffuseTexStatus == aiReturn_SUCCESS) {
-			this->diffuseMap = resMgr.loadTexture(
+			this->diffuseMap = apr::ResourceManager::loadTexture(
 				diffuseTexPath.C_Str(),
 				modelDirectory + "/" + std::string(diffuseTexPath.C_Str())
 			);
@@ -25,7 +25,7 @@ apr::Material::Material(const aiMaterial *material, std::string modelDirectory, 
 		}
 
 		if (specularTexStatus == aiReturn_SUCCESS) {
-			this->specularMap = resMgr.loadTexture(
+			this->specularMap = apr::ResourceManager::loadTexture(
 				specularTexPath.C_Str(),
 				modelDirectory + "/" + std::string(specularTexPath.C_Str())
 			);
@@ -33,7 +33,7 @@ apr::Material::Material(const aiMaterial *material, std::string modelDirectory, 
 			this->specularMap = NULL;
 		}
 
-		this->shader = resMgr.loadShader(
+		this->shader = apr::ResourceManager::loadShader(
 			"textured",
 			"resources/shaders/textured.vert",
 			"resources/shaders/textured.frag"

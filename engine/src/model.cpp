@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
@@ -11,7 +12,6 @@
 #include "camera.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
-#include "resources.hpp"
 #include "mesh.hpp"
 #include "material.hpp"
 
@@ -48,7 +48,7 @@ class DirectionalLight : public Light {
 		DirectionalLight(apr::Vector3 _color) : Light(_color) {};
 };
 
-apr::Model::Model(std::string modelPath, apr::ResourceManager& resMgr) {
+apr::Model::Model(std::string modelPath) {
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(
 		modelPath,
@@ -68,7 +68,7 @@ apr::Model::Model(std::string modelPath, apr::ResourceManager& resMgr) {
 	size_t slashPos = modelPath.find_last_of("/\\");
 	const std::string modelDirectory = modelPath.substr(0, slashPos);
 
-	this->processNode(scene->mRootNode, scene, modelDirectory, resMgr);
+	this->processNode(scene->mRootNode, scene, modelDirectory);
 }
 
 apr::Model::~Model() {
@@ -150,18 +150,18 @@ void apr::Model::draw(const Camera* camera) {
 	}
 }
 
-void apr::Model::processNode(aiNode *node, const aiScene *scene, std::string modelDirectory, apr::ResourceManager& resMgr) {
+void apr::Model::processNode(aiNode *node, const aiScene *scene, std::string modelDirectory) {
 	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
 		apr::Mesh *modelMesh = new apr::Mesh(mesh);
 
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-		apr::Material *modelMaterial = new apr::Material(material, modelDirectory, resMgr);
+		apr::Material *modelMaterial = new apr::Material(material, modelDirectory);
 
 		this->addPart({modelMesh, modelMaterial});
 	}
 
 	for(unsigned int i = 0; i < node->mNumChildren; i++) {
-		this->processNode(node->mChildren[i], scene, modelDirectory, resMgr);
+		this->processNode(node->mChildren[i], scene, modelDirectory);
 	}
 }

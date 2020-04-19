@@ -9,7 +9,6 @@ class aiScene;
 class aiNode;
 
 namespace apparator {
-	class ResourceManager;
 	class Camera;
 
 	struct ModelPart {
@@ -20,7 +19,7 @@ namespace apparator {
 
 	class Model {
 		public:
-			Model(std::string modelPath, ResourceManager& resMgr);
+			Model(std::string modelPath);
 			~Model();
 
 			void addPart(const ModelPart& part);
@@ -31,6 +30,6 @@ namespace apparator {
 			Transform transform;
 			std::vector<ModelPart> parts;
 		private:
-			void processNode(aiNode *node, const aiScene *scene, std::string modelDirectory, ResourceManager& resMgr);
+			void processNode(aiNode *node, const aiScene *scene, std::string modelDirectory);
 	};
 }
