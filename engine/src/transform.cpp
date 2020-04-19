@@ -7,12 +7,14 @@
 
 namespace apr = apparator;
 
-void apr::Transform::translate(float x, float y, float z) {
-	this->_translation += Vector3(x, y, z);
+void apr::Transform::translate(float x, float y, float z, Space space) {
+	Vector3 v = space == Space::LOCAL ? this->_rotation * Vector3(x, y, z) : Vector3(x, y, z);
+	this->_translation += v;
 }
 
-void apr::Transform::translate(const Vector3& position) {
-	this->_translation += this->_rotation * position;
+void apr::Transform::translate(const Vector3& position, Space space) {
+	Vector3 v = space == Space::LOCAL ? this->_rotation * position : position;
+	this->_translation += v;
 }
 
 void apr::Transform::setTranslation(const Vector3& position) {

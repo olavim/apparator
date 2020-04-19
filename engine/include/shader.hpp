@@ -9,7 +9,6 @@ namespace apparator {
 		public:
 			unsigned int id;
 
-			Shader() : id(0) {};
 			Shader(std::string vertexShaderPath, std::string fragmentShaderPath);
 			~Shader();
 

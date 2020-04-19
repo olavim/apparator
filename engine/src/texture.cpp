@@ -33,7 +33,7 @@ apr::Texture::Texture(std::string filePath) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	} else {
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "Could not load texture: " << filePath << std::endl;
 	}
 
 	stbi_image_free(data);

@@ -1,12 +1,19 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iostream>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
+#include "model.hpp"
 #include "math.hpp"
 #include "transform.hpp"
 #include "camera.hpp"
+#include "shader.hpp"
 #include "texture.hpp"
-#include "model.hpp"
+#include "resources.hpp"
+#include "mesh.hpp"
+#include "material.hpp"
 
 namespace apr = apparator;
 
@@ -41,6 +48,36 @@ class DirectionalLight : public Light {
 		DirectionalLight(apr::Vector3 _color) : Light(_color) {};
 };
 
+apr::Model::Model(std::string modelPath, apr::ResourceManager& resMgr) {
+	Assimp::Importer importer;
+	const aiScene *scene = importer.ReadFile(
+		modelPath,
+		aiProcess_Triangulate |
+		aiProcess_FlipUVs |
+		aiProcess_OptimizeMeshes |
+		aiProcess_OptimizeGraph
+	);
+
+	if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+		std::cout << "Could not load model: " << importer.GetErrorString() << std::endl;
+		return;
+	} else {
+		std::cout << "Model imported: " << modelPath << std::endl;
+	}
+
+	size_t slashPos = modelPath.find_last_of("/\\");
+	const std::string modelDirectory = modelPath.substr(0, slashPos);
+
+	this->processNode(scene->mRootNode, scene, modelDirectory, resMgr);
+}
+
+apr::Model::~Model() {
+	for (unsigned int i = 0; i < this->parts.size(); i++) {
+		delete this->parts[i].mesh;
+		delete this->parts[i].material;
+	}
+}
+
 void apr::Model::addPart(const ModelPart& part) {
 	this->parts.push_back(part);
 }
@@ -64,47 +101,67 @@ void apr::Model::draw(const Camera* camera) {
 
 	for (unsigned int i = 0; i < this->parts.size(); i++) {
 		ModelPart part = this->parts[i];
+		const Shader *shader = part.material->shader;
 
-		part.mesh.bind();
-		part.shader.bind();
+		part.mesh->getVertexCount();
 
-		part.shader.setMatrix4("u_worldMatrix", worldMatrix);
-		part.shader.setMatrix4("u_worldViewProjectionMatrix", worldViewProjectionMatrix);
-		part.shader.setMatrix4("u_inverseTransposeWorldViewMatrix", inverseTransposeWorldViewMatrix);
-		part.shader.setVector3("u_viewPosition", camera->transform.translation());
+		part.mesh->bind();
+		shader->bind();
 
-		if (part.material.type == MaterialType::COLORED) {
-			part.shader.setVector3("u_material.ambient", part.material.ambientColor);
-			part.shader.setVector3("u_material.diffuse", part.material.diffuseColor);
-			part.shader.setVector3("u_material.specular", part.material.specularColor);
-		}
+		shader->setMatrix4("u_worldMatrix", worldMatrix);
+		shader->setMatrix4("u_worldViewProjectionMatrix", worldViewProjectionMatrix);
+		shader->setMatrix4("u_inverseTransposeWorldViewMatrix", inverseTransposeWorldViewMatrix);
+		shader->setVector3("u_viewPosition", camera->transform.translation());
 
-		if (part.material.type == MaterialType::TEXTURED) {
-			part.shader.setInt("u_material.diffuse", 0);
+		shader->setVector3("u_material.ambient", part.material->ambientColor);
+		shader->setVector3("u_material.diffuse", part.material->diffuseColor);
+		shader->setVector3("u_material.specular", part.material->specularColor);
+
+		shader->setInt("u_material.diffuse", 0);
+		shader->setInt("u_material.specular", 1);
+
+		if (part.material->diffuseMap != NULL) {
 			glActiveTexture(GL_TEXTURE0);
-			part.material.diffuseMap->bind();
-
-			part.shader.setInt("u_material.specular", 1);
-			glActiveTexture(GL_TEXTURE1);
-			part.material.specularMap->bind();
+			part.material->diffuseMap->bind();
 		}
 
-		part.shader.setFloat("u_material.shininess", part.material.shininess);
+		if (part.material->specularMap != NULL) {
+			glActiveTexture(GL_TEXTURE1);
+			part.material->specularMap->bind();
+		}
 
-		part.shader.setVector3("u_pointLight.position", pLight.transform.translation());
-		part.shader.setVector3("u_pointLight.color", pLight.color);
-		part.shader.setFloat("u_pointLight.linear", pLight.linear);
-		part.shader.setFloat("u_pointLight.quadratic", pLight.quadratic);
+		shader->setFloat("u_material.shininess", part.material->shininess);
 
-		part.shader.setVector3("u_spotLight.position", sLight.transform.translation());
-		part.shader.setVector3("u_spotLight.direction", sLight.transform.forward());
-		part.shader.setVector3("u_spotLight.color", sLight.color);
-		part.shader.setFloat("u_spotLight.innerAngle", sLight.innerAngle);
-		part.shader.setFloat("u_spotLight.outerAngle", sLight.outerAngle);
+		shader->setVector3("u_pointLight.position", pLight.transform.translation());
+		shader->setVector3("u_pointLight.color", pLight.color);
+		shader->setFloat("u_pointLight.linear", pLight.linear);
+		shader->setFloat("u_pointLight.quadratic", pLight.quadratic);
 
-		part.shader.setVector3("u_directionalLight.direction", dLight.transform.forward());
-		part.shader.setVector3("u_directionalLight.color", dLight.color);
+		shader->setVector3("u_spotLight.position", sLight.transform.translation());
+		shader->setVector3("u_spotLight.direction", sLight.transform.forward());
+		shader->setVector3("u_spotLight.color", sLight.color);
+		shader->setFloat("u_spotLight.innerAngle", sLight.innerAngle);
+		shader->setFloat("u_spotLight.outerAngle", sLight.outerAngle);
 
-		glDrawArrays(GL_TRIANGLES, 0, part.mesh.getVertexCount());
+		shader->setVector3("u_directionalLight.direction", dLight.transform.forward());
+		shader->setVector3("u_directionalLight.color", dLight.color);
+
+		glDrawArrays(GL_TRIANGLES, 0, part.mesh->getVertexCount());
+	}
+}
+
+void apr::Model::processNode(aiNode *node, const aiScene *scene, std::string modelDirectory, apr::ResourceManager& resMgr) {
+	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
+		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
+		apr::Mesh *modelMesh = new apr::Mesh(mesh);
+
+		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+		apr::Material *modelMaterial = new apr::Material(material, modelDirectory, resMgr);
+
+		this->addPart({modelMesh, modelMaterial});
+	}
+
+	for(unsigned int i = 0; i < node->mNumChildren; i++) {
+		this->processNode(node->mChildren[i], scene, modelDirectory, resMgr);
 	}
 }

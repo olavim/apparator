@@ -21,7 +21,7 @@ static const int window_width = 1024;
 static const int window_height = 768;
 
 // Position, normal, texture coordinates
-static const float vertexData[] = {
+static const std::vector<float> vertexData = {
 	// left - br,bl,tl
 	-1.0f,-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 	-1.0f,-1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -102,33 +102,6 @@ Vector3 cubePositions[] = {
 
 static VertexLayout vertexLayout({VertexElement(3), VertexElement(3), VertexElement(2)});
 
-static std::vector<Material> materials = {
-	Material({0.0215f, 0.1745f, 0.0215f}, {0.07568f, 0.61424f, 0.07568f}, {0.633f, 0.727811f, 0.633f}, 76.8f), // emerald
-	Material({0.135f, 0.2225f, 0.1575f}, {0.54f, 0.89f, 0.63f}, {0.316228f, 0.316228f, 0.316228f}, 12.8f), // jade
-	Material({0.05375f, 0.05f, 0.06625f}, {0.18275f, 0.17f, 0.22525f}, {0.332741f, 0.328634f, 0.346435f}, 38.4f), // obsidian
-	Material({0.25f, 0.20725f, 0.20725f}, {1, 0.829f, 0.829f}, {0.296648f, 0.296648f, 0.296648f}, 11.264f), // pearl
-	Material({0.1745f, 0.01175f, 0.01175f}, {0.61424f, 0.04136f, 0.04136f}, {0.727811f, 0.626959f, 0.626959f}, 76.8f), // ruby
-	Material({0.1f, 0.18725f, 0.1745f}, {0.396f, 0.74151f, 0.69102f}, {0.297254f, 0.30829f, 0.306678f}, 12.8f), // turquoise
-	Material({0.329412f, 0.223529f, 0.027451f}, {0.780392f, 0.568627f, 0.113725f}, {0.992157f, 0.941176f, 0.807843f}, 27.89743616f), // brass
-	Material({0.2125f, 0.1275f, 0.054f}, {0.714f, 0.4284f, 0.18144f}, {0.393548f, 0.271906f, 0.166721f}, 25.6f), // bronze
-	Material({0.25f, 0.25f, 0.25f}, {0.4f, 0.4f, 0.4f}, {0.774597f, 0.774597f, 0.774597f}, 76.8f), // chrome
-	Material({0.19125f, 0.0735f, 0.0225f}, {0.7038f, 0.27048f, 0.0828f}, {0.256777f, 0.137622f, 0.086014f}, 12.8f), // copper
-	Material({0.24725f, 0.1995f, 0.0745f}, {0.75164f, 0.60648f, 0.22648f}, {0.628281f, 0.555802f, 0.366065f}, 51.2f), // gold
-	Material({0.19225f, 0.19225f, 0.19225f}, {0.50754f, 0.50754f, 0.50754f}, {0.508273f, 0.508273f, 0.508273f}, 51.2f), // silver
-	Material({0.0f, 0.0f, 0.0f}, {0.01f, 0.01f, 0.01f}, {0.50f, 0.50f, 0.50f}, 32), // black plastic
-	Material({0.0f, 0.1f, 0.06f}, {0.0f, 0.50980392f, 0.50980392f}, {0.50196078f, 0.50196078f, 0.50196078f}, 32), // cyan plastic
-	Material({0.0f, 0.0f, 0.0f}, {0.1f, 0.35f, 0.1f}, {0.45f, 0.55f, 0.45f}, 32), // green plastic
-	Material({0.0f, 0.0f, 0.0f}, {0.5f, 0.0f, 0.0f}, {0.7f, 0.6f, 0.6f}, 32), // red plastic
-	Material({0.0f, 0.0f, 0.0f}, {0.55f, 0.55f, 0.55f}, {0.70f, 0.70f, 0.70f}, 32), // white plastic
-	Material({0.0f, 0.0f, 0.0f}, {0.5f, 0.5f, 0.0f}, {0.60f, 0.60f, 0.50f}, 32), // yellow plastic
-	Material({0.02f, 0.02f, 0.02f}, {0.01f, 0.01f, 0.01f}, {0.4f, 0.4f, 0.4f}, 10), // black rubber
-	Material({0.0f, 0.05f, 0.05f}, {0.4f, 0.5f, 0.5f}, {0.04f, 0.7f, 0.7f}, 10), // cyan rubber
-	Material({0.0f, 0.05f, 0.0f}, {0.4f, 0.5f, 0.4f}, {0.04f, 0.7f, 0.04f}, 10), // green rubber
-	Material({0.05f, 0.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {0.7f, 0.04f, 0.04f}, 10), // red rubber
-	Material({0.05f, 0.05f, 0.05f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.7f, 0.7f}, 10), // white rubber
-	Material({0.05f, 0.05f, 0.0f}, {0.5f, 0.5f, 0.4f}, {0.7f, 0.7f, 0.04f}, 10) // yellow rubber
-};
-
 GLFWwindow* createWindow() {
 	if(!glfwInit()) {
 		throw std::runtime_error("Failed to initialize GLFW");
@@ -166,6 +139,21 @@ int main() {
 
 	initGlew();
 
+	InputManager inputMgr(window);
+	inputMgr.setAxisLabel("moveX", GLFW_KEY_A, GLFW_KEY_D);
+	inputMgr.setAxisLabel("moveY", GLFW_KEY_LEFT_SHIFT, GLFW_KEY_SPACE);
+	inputMgr.setAxisLabel("moveZ", GLFW_KEY_W, GLFW_KEY_S);
+	inputMgr.setKeyLabel("quit", GLFW_KEY_ESCAPE);
+	inputMgr.setKeyLabel("changeCamera", GLFW_KEY_ENTER);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	// Dark blue background
+	glClearColor(0.2f, 0.3f, 0.5f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glfwSwapBuffers(window);
+
 	// Create vertex array object
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
@@ -177,40 +165,55 @@ int main() {
 	Texture *containerDiff = resourceMgr.loadTexture("container_diff", "resources/textures/container_diff.png");
 	Texture *containerSpec = resourceMgr.loadTexture("container_spec", "resources/textures/container_spec.png");
 
-	materials.push_back(Material({containerDiff, containerSpec, 32}));
+	std::vector<Material> materials = {
+		Material({0.0215f, 0.1745f, 0.0215f}, {0.07568f, 0.61424f, 0.07568f}, {0.633f, 0.727811f, 0.633f}, 76.8f, colorShader), // emerald
+		Material({0.135f, 0.2225f, 0.1575f}, {0.54f, 0.89f, 0.63f}, {0.316228f, 0.316228f, 0.316228f}, 12.8f, colorShader), // jade
+		Material({0.05375f, 0.05f, 0.06625f}, {0.18275f, 0.17f, 0.22525f}, {0.332741f, 0.328634f, 0.346435f}, 38.4f, colorShader), // obsidian
+		Material({0.25f, 0.20725f, 0.20725f}, {1, 0.829f, 0.829f}, {0.296648f, 0.296648f, 0.296648f}, 11.264f, colorShader), // pearl
+		Material({0.1745f, 0.01175f, 0.01175f}, {0.61424f, 0.04136f, 0.04136f}, {0.727811f, 0.626959f, 0.626959f}, 76.8f, colorShader), // ruby
+		Material({0.1f, 0.18725f, 0.1745f}, {0.396f, 0.74151f, 0.69102f}, {0.297254f, 0.30829f, 0.306678f}, 12.8f, colorShader), // turquoise
+		Material({0.329412f, 0.223529f, 0.027451f}, {0.780392f, 0.568627f, 0.113725f}, {0.992157f, 0.941176f, 0.807843f}, 27.89743616f, colorShader), // brass
+		Material({0.2125f, 0.1275f, 0.054f}, {0.714f, 0.4284f, 0.18144f}, {0.393548f, 0.271906f, 0.166721f}, 25.6f, colorShader), // bronze
+		Material({0.25f, 0.25f, 0.25f}, {0.4f, 0.4f, 0.4f}, {0.774597f, 0.774597f, 0.774597f}, 76.8f, colorShader), // chrome
+		Material({0.19125f, 0.0735f, 0.0225f}, {0.7038f, 0.27048f, 0.0828f}, {0.256777f, 0.137622f, 0.086014f}, 12.8f, colorShader), // copper
+		Material({0.24725f, 0.1995f, 0.0745f}, {0.75164f, 0.60648f, 0.22648f}, {0.628281f, 0.555802f, 0.366065f}, 51.2f, colorShader), // gold
+		Material({0.19225f, 0.19225f, 0.19225f}, {0.50754f, 0.50754f, 0.50754f}, {0.508273f, 0.508273f, 0.508273f}, 51.2f, colorShader), // silver
+		Material({0.0f, 0.0f, 0.0f}, {0.01f, 0.01f, 0.01f}, {0.50f, 0.50f, 0.50f}, 32, colorShader), // black plastic
+		Material({0.0f, 0.1f, 0.06f}, {0.0f, 0.50980392f, 0.50980392f}, {0.50196078f, 0.50196078f, 0.50196078f}, 32, colorShader), // cyan plastic
+		Material({0.0f, 0.0f, 0.0f}, {0.1f, 0.35f, 0.1f}, {0.45f, 0.55f, 0.45f}, 32, colorShader), // green plastic
+		Material({0.0f, 0.0f, 0.0f}, {0.5f, 0.0f, 0.0f}, {0.7f, 0.6f, 0.6f}, 32, colorShader), // red plastic
+		Material({0.0f, 0.0f, 0.0f}, {0.55f, 0.55f, 0.55f}, {0.70f, 0.70f, 0.70f}, 32, colorShader), // white plastic
+		Material({0.0f, 0.0f, 0.0f}, {0.5f, 0.5f, 0.0f}, {0.60f, 0.60f, 0.50f}, 32, colorShader), // yellow plastic
+		Material({0.02f, 0.02f, 0.02f}, {0.01f, 0.01f, 0.01f}, {0.4f, 0.4f, 0.4f}, 10, colorShader), // black rubber
+		Material({0.0f, 0.05f, 0.05f}, {0.4f, 0.5f, 0.5f}, {0.04f, 0.7f, 0.7f}, 10, colorShader), // cyan rubber
+		Material({0.0f, 0.05f, 0.0f}, {0.4f, 0.5f, 0.4f}, {0.04f, 0.7f, 0.04f}, 10, colorShader), // green rubber
+		Material({0.05f, 0.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {0.7f, 0.04f, 0.04f}, 10, colorShader), // red rubber
+		Material({0.05f, 0.05f, 0.05f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.7f, 0.7f}, 10, colorShader), // white rubber
+		Material({0.05f, 0.05f, 0.0f}, {0.5f, 0.5f, 0.4f}, {0.7f, 0.7f, 0.04f}, 10, colorShader), // yellow rubber
+		Material({containerDiff, containerSpec, 32, textureShader})
+	};
 
-	Mesh cubeMesh(vertexLayout, &vertexData[0], sizeof(vertexData) / sizeof(float) / 8);
+	std::vector<Model*> models;
+	Model *crysisNanoSuit = resourceMgr.loadModel("nanosuit", "resources/models/nanosuit/nanosuit.obj");
+	models.push_back(crysisNanoSuit);
 
-	std::vector<Model> models;
-	for (unsigned int i = 0; i < materials.size(); i++) {
-		Model m;
-		Shader *shader = materials[i].type == MaterialType::COLORED ? colorShader : textureShader;
-		m.addPart({cubeMesh, materials[i], *shader});
-		m.transform.translate(cubePositions[i]);
-		m.transform.rotate(Quaternion(static_cast<float>(rand()), static_cast<float>(rand()), static_cast<float>(rand())));
-		models.push_back(m);
-	}
-
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-
-	// Dark blue background
-	glClearColor(0.2f, 0.3f, 0.5f, 0.0f);
-
-	InputManager inputMgr(window);
-	inputMgr.setAxisLabel("moveX", GLFW_KEY_A, GLFW_KEY_D);
-	inputMgr.setAxisLabel("moveY", GLFW_KEY_LEFT_SHIFT, GLFW_KEY_SPACE);
-	inputMgr.setAxisLabel("moveZ", GLFW_KEY_W, GLFW_KEY_S);
-	inputMgr.setKeyLabel("quit", GLFW_KEY_ESCAPE);
-	inputMgr.setKeyLabel("changeCamera", GLFW_KEY_ENTER);
+	// Mesh cubeMesh(vertexLayout, vertexData);
+	// for (unsigned int i = 0; i < materials.size(); i++) {
+	// 	Model m;
+	// 	Shader *shader = materials[i].diffuseMap ? textureShader : colorShader;
+	// 	m.addPart({cubeMesh, materials[i]});
+	// 	m.transform.translate(cubePositions[i]);
+	// 	m.transform.rotate(Quaternion(static_cast<float>(rand()), static_cast<float>(rand()), static_cast<float>(rand())));
+	// 	models.push_back(m);
+	// }
 
 	float aspect = static_cast<float>(window_width) / static_cast<float>(window_height);
 	PerspectiveCamera pCamera(90, aspect);
 	OrtographicCamera oCamera(-5 * aspect, 5 * aspect, -5, 5);
 
-	pCamera.transform.translate(-4, 4, 4);
+	pCamera.transform.translate(-4, 4, 4, Space::WORLD);
 	pCamera.transform.setRotation(Quaternion::lookAt(pCamera.transform.translation(), Vector3(0, 1, 0)));
-	oCamera.transform.translate(-4, 4, 4);
+	oCamera.transform.translate(-4, 4, 4, Space::WORLD);
 	oCamera.transform.setRotation(Quaternion::lookAt(oCamera.transform.translation(), Vector3(0, 1, 0)));
 
 	Camera *activeCamera = &pCamera;
@@ -235,19 +238,19 @@ int main() {
 			lastTime = currentTime;
 
 			// Move camera
-			Vector3 position(inputMgr.getAxis("moveX"), inputMgr.getAxis("moveY"), inputMgr.getAxis("moveZ"));
-			activeCamera->transform.translate(position * deltaTime * speed);
+			Vector3 p1(inputMgr.getAxis("moveX"), 0, inputMgr.getAxis("moveZ"));
+			Vector3 p2(0, inputMgr.getAxis("moveY"), 0);
+			activeCamera->transform.translate(p1 * deltaTime * speed, Space::LOCAL);
+			activeCamera->transform.translate(p2 * deltaTime * speed, Space::WORLD);
 
 			// Rotate camera
 			Quaternion yaw(Vector3(0, 1, 0), mouseSensitivity * -static_cast<float>(inputMgr.getMouseDeltaX()));
 			Quaternion pitch(activeCamera->transform.right(), mouseSensitivity * -static_cast<float>(inputMgr.getMouseDeltaY()));
 			activeCamera->transform.rotate(yaw * pitch);
 
-			// model.transform.setScale((3 + sin(currentTime)) / 4, 1, 1);
-
+			// Draw models
 			for (unsigned int i = 0; i < models.size(); i++) {
-				// Draw model
-				models[i].draw(activeCamera);
+				models[i]->draw(activeCamera);
 			}
 
 			// GLFW uses double buffering. Here we swap the buffer we render to with the one that is displayed.

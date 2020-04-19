@@ -3,19 +3,29 @@
 #include "math.hpp"
 
 namespace apparator {
+	enum class Space {
+		WORLD,
+		LOCAL
+	};
+
 	class Transform {
 		public:
-			void translate(float x, float y, float z);
-			void translate(const Vector3& position);
+			void translate(float x, float y, float z, Space space);
+			void translate(const Vector3& position, Space space);
 			void setTranslation(const Vector3& position);
+
 			void scale(float x, float y, float z);
 			void setScale(float x, float y, float z);
+
 			void rotate(const Quaternion& quat);
 			void setRotation(const Quaternion& quat);
+
 			Matrix4 matrix() const;
+
 			const Vector3& translation() const;
 			const Vector3& scale() const;
 			const Quaternion& rotation() const;
+
 			Vector3 forward();
 			Vector3 forward() const;
 			Vector3 right();
