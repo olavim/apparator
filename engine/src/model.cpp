@@ -83,7 +83,7 @@ void apr::Model::addPart(const ModelPart& part) {
 }
 
 void apr::Model::draw(const Camera* camera) {
-	apr::Matrix4 worldMatrix = this->transform.matrix();
+	apr::Matrix4 worldMatrix = this->node->transform.matrix();
 	apr::Matrix4 worldViewProjectionMatrix = worldMatrix * camera->matrix();
 	apr::Matrix4 inverseTransposeWorldViewMatrix = worldMatrix;
 	inverseTransposeWorldViewMatrix.transpose();

@@ -14,6 +14,7 @@
 #include "texture.hpp"
 #include "material.hpp"
 #include "model.hpp"
+#include "node.hpp"
 
 using namespace apparator;
 
@@ -134,6 +135,17 @@ void initGlew() {
 	}
 }
 
+void drawNode(const Node *node, const Camera *camera) {
+	if (node->getDrawable()) {
+		node->getDrawable()->draw(camera);
+	}
+
+	for (unsigned int i = 0; i < node->children.size(); i++) {
+		Node *child = node->children[i];
+		drawNode(child, camera);
+	}
+}
+
 int main() {
 	GLFWwindow* window = createWindow();
 
@@ -192,15 +204,15 @@ int main() {
 		Material({containerDiff, containerSpec, 32, textureShader})
 	};
 
-	std::vector<Model*> models;
-	Model *crysisNanoSuit = ResourceManager::loadModel("nanosuit", "resources/models/nanosuit/nanosuit.obj");
-	models.push_back(crysisNanoSuit);
+	std::vector<Node*> nodes;
+	Node *node = new Node();
+	node->setDrawable(ResourceManager::loadModel("nanosuit", "resources/models/nanosuit/nanosuit.obj"));
+	nodes.push_back(node);
 
-	// Mesh cubeMesh(vertexLayout, vertexData);
+	// Mesh *cubeMesh = new Mesh(vertexLayout, vertexData);
 	// for (unsigned int i = 0; i < materials.size(); i++) {
 	// 	Model m;
-	// 	Shader *shader = materials[i].diffuseMap ? textureShader : colorShader;
-	// 	m.addPart({cubeMesh, materials[i]});
+	// 	m.addPart({cubeMesh, &materials[i]});
 	// 	m.transform.translate(cubePositions[i]);
 	// 	m.transform.rotate(Quaternion(static_cast<float>(rand()), static_cast<float>(rand()), static_cast<float>(rand())));
 	// 	models.push_back(m);
@@ -248,8 +260,9 @@ int main() {
 			activeCamera->transform.rotate(yaw * pitch);
 
 			// Draw models
-			for (unsigned int i = 0; i < models.size(); i++) {
-				models[i]->draw(activeCamera);
+			for (unsigned int i = 0; i < nodes.size(); i++) {
+				Node *node = nodes[i];
+				drawNode(node, activeCamera);
 			}
 
 			// GLFW uses double buffering. Here we swap the buffer we render to with the one that is displayed.

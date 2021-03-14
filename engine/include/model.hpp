@@ -3,7 +3,7 @@
 #include <vector>
 #include "mesh.hpp"
 #include "material.hpp"
-#include "transform.hpp"
+#include "drawable.hpp"
 
 class aiScene;
 class aiNode;
@@ -17,8 +17,9 @@ namespace apparator {
 		ModelPart(const Mesh* m, const Material* mat) : mesh(m), material(mat) {};
 	};
 
-	class Model {
+	class Model : public Drawable {
 		public:
+			Model();
 			Model(std::string modelPath);
 			~Model();
 
@@ -27,7 +28,6 @@ namespace apparator {
 
 			void draw(const Camera* camera);
 
-			Transform transform;
 			std::vector<ModelPart> parts;
 		private:
 			void processNode(aiNode *node, const aiScene *scene, std::string modelDirectory);
