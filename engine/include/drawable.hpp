@@ -14,9 +14,9 @@ namespace apparator {
 			~Drawable();
 
 			void setNode(Node* node);
-			virtual void draw(const Camera* camera);
+			virtual void draw(const Camera* camera) const;
 
 		protected:
-			Node* node;
+			Node* node = nullptr;
 	};
 }

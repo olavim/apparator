@@ -14,5 +14,5 @@ void apr::Drawable::setNode(Node *node) {
 	this->node = node;
 }
 
-void apr::Drawable::draw(const Camera* camera) {
+void apr::Drawable::draw(const Camera* camera) const {
 }

@@ -34,5 +34,9 @@ namespace apparator {
 			Vector3 _translation = Vector3();
 			Vector3 _scale = Vector3(1, 1, 1);
 			Quaternion _rotation = Quaternion(Vector3(0, 0, 0), 1);
+
+			Transform &operator *= (const Transform &t);
 	};
+
+	Transform operator * (Transform lhs, const Transform &rhs);
 }

@@ -48,6 +48,9 @@ class DirectionalLight : public Light {
 		DirectionalLight(apr::Vector3 _color) : Light(_color) {};
 };
 
+apr::Model::Model() {
+}
+
 apr::Model::Model(std::string modelPath) {
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(
@@ -72,18 +75,14 @@ apr::Model::Model(std::string modelPath) {
 }
 
 apr::Model::~Model() {
-	for (unsigned int i = 0; i < this->parts.size(); i++) {
-		delete this->parts[i].mesh;
-		delete this->parts[i].material;
-	}
 }
 
 void apr::Model::addPart(const ModelPart& part) {
 	this->parts.push_back(part);
 }
 
-void apr::Model::draw(const Camera* camera) {
-	apr::Matrix4 worldMatrix = this->node->transform.matrix();
+void apr::Model::draw(const Camera* camera) const {
+	apr::Matrix4 worldMatrix = this->node->globalTransform().matrix();
 	apr::Matrix4 worldViewProjectionMatrix = worldMatrix * camera->matrix();
 	apr::Matrix4 inverseTransposeWorldViewMatrix = worldMatrix;
 	inverseTransposeWorldViewMatrix.transpose();

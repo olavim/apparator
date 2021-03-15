@@ -14,13 +14,18 @@ namespace apparator {
 			void addChild(Node *node);
 			void setDrawable(Drawable *node);
 
-			Drawable* getDrawable();
-			Drawable* getDrawable() const;
+			Drawable *drawable();
+			const Drawable *drawable() const;
 
-			Transform transform;
+			Transform &transform();
+			const Transform &transform() const;
+			Transform globalTransform() const;
+
 			std::vector<Node*> children;
+			Node* parent = nullptr;
 
 		protected:
-			Drawable *drawable;
+			Drawable *_drawable = nullptr;
+			Transform _transform;
 	};
 }

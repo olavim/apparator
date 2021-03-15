@@ -136,8 +136,8 @@ void initGlew() {
 }
 
 void drawNode(const Node *node, const Camera *camera) {
-	if (node->getDrawable()) {
-		node->getDrawable()->draw(camera);
+	if (node->drawable()) {
+		node->drawable()->draw(camera);
 	}
 
 	for (unsigned int i = 0; i < node->children.size(); i++) {
@@ -204,12 +204,19 @@ int main() {
 		Material({containerDiff, containerSpec, 32, textureShader})
 	};
 
-	std::vector<Node*> nodes;
-	Node *node = new Node();
-	node->setDrawable(ResourceManager::loadModel("nanosuit", "resources/models/nanosuit/nanosuit.obj"));
-	nodes.push_back(node);
+	Node *nanoSuitNode = new Node();
+	nanoSuitNode->setDrawable(ResourceManager::loadModel("nanosuit", "resources/models/nanosuit/nanosuit.obj"));
 
-	// Mesh *cubeMesh = new Mesh(vertexLayout, vertexData);
+	Mesh *cubeMesh = new Mesh(vertexLayout, vertexData);
+	Model m;
+	m.addPart({cubeMesh, &materials[0]});
+
+	Node *cubeNode = new Node();
+	cubeNode->setDrawable(&m);
+	cubeNode->addChild(nanoSuitNode);
+
+	std::vector<Node*> nodes;
+	nodes.push_back(cubeNode);
 	// for (unsigned int i = 0; i < materials.size(); i++) {
 	// 	Model m;
 	// 	m.addPart({cubeMesh, &materials[i]});
@@ -258,6 +265,9 @@ int main() {
 			Quaternion yaw(Vector3(0, 1, 0), mouseSensitivity * -static_cast<float>(inputMgr.getMouseDeltaX()));
 			Quaternion pitch(activeCamera->transform.right(), mouseSensitivity * -static_cast<float>(inputMgr.getMouseDeltaY()));
 			activeCamera->transform.rotate(yaw * pitch);
+
+			cubeNode->transform().rotate(Quaternion(Vector3(0, 1, 0), 0.01));
+			nanoSuitNode->transform().rotate(Quaternion(Vector3(0, 1, 0), -0.009));
 
 			// Draw models
 			for (unsigned int i = 0; i < nodes.size(); i++) {

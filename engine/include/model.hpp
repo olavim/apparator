@@ -26,7 +26,7 @@ namespace apparator {
 			void addPart(const ModelPart& part);
 			void addPart(const ModelPart& part) const;
 
-			void draw(const Camera* camera);
+			void draw(const Camera* camera) const;
 
 			std::vector<ModelPart> parts;
 		private:

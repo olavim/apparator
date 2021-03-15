@@ -91,3 +91,21 @@ apr::Vector3 apr::Transform::forward() {
 apr::Vector3 apr::Transform::forward() const {
 	return this->_rotation * Vector3(0, 0, 1);
 }
+
+apr::Transform &apr::Transform::operator *= (const apr::Transform& t) {
+	this->_translation += t._translation;
+
+	this->_scale[0] *= t._scale[0];
+	this->_scale[1] *= t._scale[1];
+	this->_scale[2] *= t._scale[2];
+
+	this->_rotation *= t._rotation;
+	this->_rotation.normalize();
+
+	return *this;
+}
+
+apr::Transform apr::operator * (apr::Transform lhs, const apr::Transform& rhs) {
+	lhs *= rhs;
+	return lhs;
+}

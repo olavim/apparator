@@ -10,18 +10,35 @@ apr::Node::~Node() {
 }
 
 void apr::Node::addChild(Node *node) {
+	node->parent = this;
 	this->children.push_back(node);
 }
 
 void apr::Node::setDrawable(Drawable *drawable) {
-	this->drawable = drawable;
-	this->drawable->setNode(this);
+	this->_drawable = drawable;
+	this->_drawable->setNode(this);
 }
 
-apr::Drawable* apr::Node::getDrawable() {
-	return this->drawable;
+apr::Drawable* apr::Node::drawable() {
+	return this->_drawable;
 }
 
-apr::Drawable* apr::Node::getDrawable() const {
-	return this->drawable;
+const apr::Drawable* apr::Node::drawable() const {
+	return this->_drawable;
+}
+
+apr::Transform& apr::Node::transform() {
+	return this->_transform;
+}
+
+const apr::Transform& apr::Node::transform() const {
+	return this->_transform;
+}
+
+apr::Transform apr::Node::globalTransform() const {
+	if (this->parent) {
+		return this->parent->globalTransform() * this->_transform;
+	}
+
+	return this->_transform;
 }
