@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "math.hpp"
+#include "math/vector3.hpp"
 
 class aiMaterial;
 

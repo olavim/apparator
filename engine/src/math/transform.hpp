@@ -1,6 +1,8 @@
 #pragma once
 
-#include "math.hpp"
+#include "quaternion.hpp"
+#include "vector3.hpp"
+#include "mat4.hpp"
 
 namespace apparator {
 	enum class Space {

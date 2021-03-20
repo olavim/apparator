@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
+#include "renderer/camera.hpp"
 #include "drawable.hpp"
-#include "camera.hpp"
 #include "node.hpp"
 
 namespace apparator {

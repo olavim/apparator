@@ -2,20 +2,20 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Add source files
 file(
 	GLOB_RECURSE SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/**.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/**.cpp
 )
 
 # Add header files
 file(
 	GLOB_RECURSE HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/**.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/**.hpp
 )
 
 add_executable(engine ${HEADER_FILES} ${SOURCE_FILES})

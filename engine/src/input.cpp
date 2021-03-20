@@ -2,6 +2,7 @@
 #include <cmath>
 #include <string>
 #include <stdexcept>
+#include <iostream>
 #include "input.hpp"
 
 namespace apr = apparator;
@@ -24,7 +25,7 @@ apr::InputManager::InputManager(GLFWwindow *win) {
 
 	glfwSetWindowUserPointer(this->window, this);
 	glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GL_TRUE);
-	glfwSetInputMode(window, GLFW_CURSOR, CURSOR_MODE_CAPTURED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwSetCursorPosCallback(this->window, apr::InputManager::cursorPosCallback);
 	// glfwSetKeyCallback(this->window, apr::InputManager::keyCallback);

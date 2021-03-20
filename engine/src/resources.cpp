@@ -3,8 +3,8 @@
 #include <string>
 #include <iostream>
 
-#include "shader.hpp"
-#include "texture.hpp"
+#include "renderer/shader.hpp"
+#include "renderer/texture.hpp"
 #include "resources.hpp"
 #include "model.hpp"
 

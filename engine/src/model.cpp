@@ -6,12 +6,12 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "math/vector3.hpp"
+#include "math/transform.hpp"
+#include "renderer/shader.hpp"
+#include "renderer/camera.hpp"
+#include "renderer/texture.hpp"
 #include "model.hpp"
-#include "math.hpp"
-#include "transform.hpp"
-#include "camera.hpp"
-#include "shader.hpp"
-#include "texture.hpp"
 #include "mesh.hpp"
 #include "material.hpp"
 

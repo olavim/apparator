@@ -5,9 +5,6 @@
 #include "material.hpp"
 #include "drawable.hpp"
 
-class aiScene;
-class aiNode;
-
 namespace apparator {
 	class Camera;
 

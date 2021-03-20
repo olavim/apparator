@@ -2,10 +2,9 @@
 #include <assimp/postprocess.h>
 
 #include "material.hpp"
-#include "math.hpp"
-#include "texture.hpp"
-#include "shader.hpp"
 #include "resources.hpp"
+#include "renderer/texture.hpp"
+#include "renderer/shader.hpp"
 
 namespace apr = apparator;
 

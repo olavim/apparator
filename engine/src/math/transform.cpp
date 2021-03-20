@@ -2,8 +2,10 @@
 #include <sstream>
 #include <string>
 
-#include "math.hpp"
 #include "transform.hpp"
+#include "vector3.hpp"
+#include "quaternion.hpp"
+#include "mat4.hpp"
 
 namespace apr = apparator;
 

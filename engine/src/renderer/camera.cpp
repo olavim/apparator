@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "math.hpp"
 #include "camera.hpp"
+#include "math/utils.hpp"
+#include "math/mat4.hpp"
+#include "math/transform.hpp"
 
 namespace apr = apparator;
 

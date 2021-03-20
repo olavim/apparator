@@ -4,8 +4,6 @@
 #include <unordered_map>
 #include <GLFW/glfw3.h>
 
-#define CURSOR_MODE_CAPTURED GLFW_CURSOR_DISABLED
-
 #define AXIS_TYPE_KEY 1
 #define AXIS_TYPE_JOYSTICK 2
 
@@ -18,6 +16,7 @@ namespace apparator {
 	class InputManager {
 			static void cursorPosCallback(GLFWwindow *window, double x, double y);
 			static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+			static void windowFocusCallback(GLFWwindow* window, int focused);
 		public:
 			InputManager(GLFWwindow *window);
 			~InputManager();

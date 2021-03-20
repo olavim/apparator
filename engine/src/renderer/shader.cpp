@@ -6,7 +6,9 @@
 #include <GL/glew.h>
 
 #include "shader.hpp"
-#include "resources.hpp"
+#include "../resources.hpp"
+#include "../math/mat4.hpp"
+#include "../math/vector3.hpp"
 
 namespace apr = apparator;
 

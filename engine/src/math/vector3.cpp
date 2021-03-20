@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 #include <math.h>
 
-#include "math.hpp"
+#include "vector3.hpp"
 
 namespace apr = apparator;
 

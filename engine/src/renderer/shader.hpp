@@ -2,7 +2,8 @@
 
 #include <string>
 #include <GL/glew.h>
-#include "math.hpp"
+#include "../math/mat4.hpp"
+#include "../math/vector3.hpp"
 
 namespace apparator {
 	class Shader {

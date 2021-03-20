@@ -1,7 +1,9 @@
 #include <GL/glew.h>
 #include <math.h>
 
-#include "math.hpp"
+#include "mat4.hpp"
+#include "vector3.hpp"
+#include "vector4.hpp"
 
 namespace apr = apparator;
 
@@ -104,4 +106,15 @@ apr::Vector4 apr::operator + (apr::Vector4 lhs, const apr::Vector4 &rhs) {
 apr::Vector4 apr::operator - (apr::Vector4 lhs, const apr::Vector4 &rhs) {
 	lhs -= rhs;
 	return lhs;
+}
+
+apr::Vector4 apr::operator * (apr::Matrix4 lhs, const apr::Vector4& columnVector) {
+	float *m = lhs.m;
+
+	return apr::Vector4(
+		apr::Vector4(m[0], m[1], m[2], m[3]) * columnVector,
+		apr::Vector4(m[4], m[5], m[6], m[7]) * columnVector,
+		apr::Vector4(m[8], m[9], m[10], m[11]) * columnVector,
+		apr::Vector4(m[12], m[13], m[14], m[15]) * columnVector
+	);
 }

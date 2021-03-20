@@ -5,13 +5,13 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "math.hpp"
-#include "camera.hpp"
+#include "math/vector3.hpp"
+#include "renderer/camera.hpp"
+#include "renderer/shader.hpp"
+#include "renderer/texture.hpp"
 #include "input.hpp"
 #include "resources.hpp"
 #include "mesh.hpp"
-#include "shader.hpp"
-#include "texture.hpp"
 #include "material.hpp"
 #include "model.hpp"
 #include "node.hpp"

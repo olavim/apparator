@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math.hpp"
-#include "transform.hpp"
+#include "../math/mat4.hpp"
+#include "../math/transform.hpp"
 
 namespace apparator {
 	class Camera {

@@ -2,7 +2,7 @@
 #include <math.h>
 #include <cstring>
 
-#include "math.hpp"
+#include "mat4.hpp"
 
 namespace apr = apparator;
 
@@ -146,17 +146,6 @@ apr::Matrix4 &apr::Matrix4::operator *= (const apr::Matrix4& matrix) {
 apr::Matrix4 &apr::Matrix4::operator - () {
 	(*this) *= -1;
 	return *this;
-}
-
-apr::Vector4 apr::operator * (apr::Matrix4 lhs, const apr::Vector4& columnVector) {
-	float *m = lhs.m;
-
-	return apr::Vector4(
-		apr::Vector4(m[0], m[1], m[2], m[3]) * columnVector,
-		apr::Vector4(m[4], m[5], m[6], m[7]) * columnVector,
-		apr::Vector4(m[8], m[9], m[10], m[11]) * columnVector,
-		apr::Vector4(m[12], m[13], m[14], m[15]) * columnVector
-	);
 }
 
 apr::Matrix4 apr::operator * (apr::Matrix4 lhs, const apr::Matrix4& rhs) {

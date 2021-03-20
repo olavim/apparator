@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "math.hpp"
 
 namespace apparator {
 	class Texture {

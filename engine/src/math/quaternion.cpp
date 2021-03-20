@@ -1,6 +1,9 @@
 #include <math.h>
 #include <iostream>
-#include "math.hpp"
+
+#include "utils.hpp"
+#include "mat4.hpp"
+#include "quaternion.hpp"
 
 namespace apr = apparator;
 

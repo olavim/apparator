@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <GL/glew.h>
 #include "stb_image.h"
 
 #include "texture.hpp"
